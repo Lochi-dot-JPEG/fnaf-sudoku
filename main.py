@@ -56,6 +56,11 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     draw_background()
+
+    # The size values of a rectangle can be ignored
+    board_position = (100,0)
+    screen.blit(sudoku_scene.boards_texture, board_position)
+
     
 
     # RENDER YOUR GAME HERE
