@@ -54,13 +54,14 @@ selected_tile_y = 4
 def draw_board(screen : pygame.Surface):
     center = (screen.get_width()/2,screen.get_height() / 2 )
     origin = (int(center[0] - board_length / 2), int(center[1] - board_length / 2))
-    # Draw the large grid areas
-    print(selected_tile_x)
-    print(selected_tile_y)
 
+    # Draw the large grid areas
+    # Cycle through the x coordinates from 0-2
     for x in range(3):
+        # Cycle through the y coordinates from 0-2
         for y in range(3):
             draw_3x_grid(x,y)
+
     screen.blit(board_texture, origin)
 
 
@@ -86,6 +87,7 @@ def draw_3x_grid(x,y):
                 text_location_y = draw_location[1]
                 text_location_x += tile_font_draw_offset[0]
                 text_location_y += tile_font_draw_offset[1]
+
                 # This could be optimised to store the text surfaces so they do not need to be re-rendered every frame
                 rendered_text = font.render(str(tile_text),True,text_color) 
                 board_texture.blit(rendered_text, (text_location_x, text_location_y))
@@ -116,3 +118,36 @@ def right_pressed():
     selected_tile_x += 1
     if selected_tile_x > 8:
         selected_tile_x = 8
+
+def key_pressed(event):
+    if event.key == pygame.K_LEFT:
+        left_pressed()
+    elif event.key == pygame.K_RIGHT:
+        right_pressed()
+    elif event.key == pygame.K_UP:
+        up_pressed()
+    elif event.key == pygame.K_DOWN:
+        down_pressed()
+    elif event.key == pygame.K_1:
+        input_number(1)
+    elif event.key == pygame.K_2:
+        input_number(2)
+    elif event.key == pygame.K_3:
+        input_number(3)
+    elif event.key == pygame.K_4:
+        input_number(4)
+    elif event.key == pygame.K_5:
+        input_number(5)
+    elif event.key == pygame.K_6:
+        input_number(6)
+    elif event.key == pygame.K_7:
+        input_number(7)
+    elif event.key == pygame.K_8:
+        input_number(8)
+    elif event.key == pygame.K_9:
+        input_number(9)
+
+
+def input_number(value):
+    board_state[selected_tile_y][selected_tile_x] = value
+    

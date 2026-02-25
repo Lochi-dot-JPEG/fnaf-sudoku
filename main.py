@@ -57,14 +57,7 @@ def handle_input():
                 running = False
                 return
 
-            if event.key == pygame.K_LEFT:
-                sudoku_scene.left_pressed()
-            if event.key == pygame.K_RIGHT:
-                sudoku_scene.right_pressed()
-            if event.key == pygame.K_UP:
-                sudoku_scene.up_pressed()
-            if event.key == pygame.K_DOWN:
-                sudoku_scene.down_pressed()
+            sudoku_scene.key_pressed(event)
 
         # pygame.QUIT event means the user clicked X to close your window
         if event.type == pygame.QUIT:
