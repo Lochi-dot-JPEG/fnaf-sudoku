@@ -61,12 +61,7 @@ while running:
     screen.fill("purple")
     draw_background()
 
-    # The size values of a rectangle can be ignored
-    board_position = (100,0)
-    sudoku_scene.draw_board(screen, board_position)
-    screen.blit(sudoku_scene.board_texture, board_position)
-
-    
+    sudoku_scene.draw_board(screen)
 
     # RENDER YOUR GAME HERE
 
