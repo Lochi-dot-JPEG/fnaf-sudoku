@@ -48,15 +48,35 @@ def draw_background():
 def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 
-
-
-while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
+def handle_input():
+    # Access the running from outside of out the context of the function
+    global running
     for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+                return
+
+            if event.key == pygame.K_LEFT:
+                sudoku_scene.left_pressed()
+            if event.key == pygame.K_RIGHT:
+                sudoku_scene.right_pressed()
+            if event.key == pygame.K_UP:
+                sudoku_scene.up_pressed()
+            if event.key == pygame.K_DOWN:
+                sudoku_scene.down_pressed()
+
+        # pygame.QUIT event means the user clicked X to close your window
         if event.type == pygame.QUIT:
             running = False
 
+
+
+while running:
+
+    # poll for events
+
+    handle_input()
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     draw_background()

@@ -41,3 +41,17 @@ def draw_3x_grid(x,y):
             ))
 
 
+def up_pressed():
+    pass
+
+
+def down_pressed():
+    pass
+
+
+def left_pressed():
+    pass
+
+
+def right_pressed():
+    pass
