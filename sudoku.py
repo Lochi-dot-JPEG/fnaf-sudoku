@@ -13,15 +13,16 @@ board_state = [
         [0,0,0,0,0,0,0,0,0],
 ]
 
-tile_font_draw_offset = (6,1)
+tile_font_draw_offset = (5,0)
 
 # Load font to draw numbers with
 pygame.init()
-font = pygame.font.Font('assets/dejavu-sans/ttf/DejaVuSansMono-Bold.ttf', 20)
+#font = pygame.font.Font('assets/dejavu-sans/ttf/DejaVuSansMono-Bold.ttf', 20)
+font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 16)
 
 
 # The size of each small tile where numbers are entered
-grid_tile_size = 24
+grid_tile_size = 20
 # The gap between each set of three grid squares
 large_gap = 4
 # The gap between each grid square
