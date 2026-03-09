@@ -21,3 +21,5 @@ def run_game():
     else:
         print("Survived for: " + str(result.time) + " seconds")
 
+
+

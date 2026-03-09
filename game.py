@@ -1,5 +1,7 @@
+from ctypes import Array
 import sudoku
 import pygame
+import button
 
 window_size = (640,360)
 clock = pygame.time.Clock()
@@ -92,3 +94,26 @@ def play() -> Result:
     result.survived = survived
     result.time = survival_time
     return result
+
+
+
+def show_title(inputs: list[str]) -> str:
+    print("Shows title")
+    return inputs[0] # Temporarily acts as if first button is pressed
+
+
+def ask(question: str, inputs: list[str]) -> str:
+    ask_buttons : list[button.Button] = []
+    start_y = 200
+    gap = 30
+    x_position = 40
+    pygame.rect.Rect(1,2,3,3)
+
+    for i in range(inputs.__len__()):
+        button_position = pygame.Vector2(x_position, start_y + gap * i)
+        label = inputs[i] 
+        new_button = button.Button(button_position , label)
+
+    print("Asks question")
+    return inputs[0]# Temporarily acts as if first button is pressed
+
