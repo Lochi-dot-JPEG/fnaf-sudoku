@@ -1,6 +1,7 @@
 import sudoku
 import pygame
 import button
+import globals
 
 window_size = (640,360)
 clock = pygame.time.Clock()
@@ -11,7 +12,6 @@ screen_rect = screen.get_rect()
 
 background = pygame.image.load("assets/office.png")
 title_background = pygame.image.load("assets/title.png")
-title_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 40)
 title_text = pygame.surface.Surface(window_size)
 title_text_lines = ["Five", "Nights", "at Freddy’s:", "Sudoku"]
 
@@ -109,7 +109,7 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
     gap = 40
     ask_pos = pygame.Vector2(16,16)
     x_position = 16
-    ask_text = button.button_font.render(question, True, button.defaultFontColor)
+    ask_text = globals.button_font.render(question, True, globals.defaultFontColor)
 
     for i in range(inputs.__len__()):
         button_position = pygame.Vector2(x_position, start_y + gap * i)
@@ -145,7 +145,7 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
         if title_decoration:
             i = 0
             for line in title_text_lines:
-                rendered_font = title_font.render(line, True, button.defaultFontColor)
+                rendered_font = globals.title_font.render(line, True, globals.defaultFontColor)
                 screen.blit(rendered_font, (x_position,48 * i))
                 i += 1
 

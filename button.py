@@ -1,13 +1,6 @@
-from os import timerfd_create
-from time import sleep
-from turtle import pos
 import pygame
+import globals
 
-
-
-# TODO store all colours, fonts and stuff globally in an import
-defaultFontColor = (255, 255, 255)
-button_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 20)
 
 # Button class that extends the pygame.sprite.Sprite class for visible game objects
 # Used for the title screen and ask menu
@@ -30,11 +23,11 @@ class Button():
     #font_colour : tuple[int,int,int]
 
     # Function run when the button is initially created using Button()
-    def __init__(self, position : pygame.Vector2, label : str, font_colour = defaultFontColor, width : int = 200):
+    def __init__(self, position : pygame.Vector2, label : str, font_colour = globals.defaultFontColor, width : int = 200):
         # Sets text variable to the inputted label variable
         self.text = label
 
-        self.text_surface = button_font.render(label, True, font_colour)
+        self.text_surface = globals.button_font.render(label, True, font_colour)
 
         height = 32
 

@@ -1,15 +1,13 @@
-
 import pygame
+# Initialise pygame before importing other modules so fonts can load
+pygame.init()
 import game
-from game import play
 import player_management
 
 # pygame setup
-pygame.init()
 running = True
 
 title_options = ["Play Game", "Tutorial"]
-
 
 while running:
 

@@ -1,4 +1,5 @@
 import pygame
+import globals
 
 # 2 dimensional list that stores the state of the board, with each
 board_state = [
@@ -17,8 +18,6 @@ tile_font_draw_offset = (5,0)
 
 # Load font to draw numbers with
 pygame.init()
-#font = pygame.font.Font('assets/dejavu-sans/ttf/DejaVuSansMono-Bold.ttf', 20)
-font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 16)
 
 
 # The size of each small tile where numbers are entered
@@ -41,9 +40,15 @@ selected_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 
 # Colours
 
-tile_texture.fill(pygame.Color(255,255,255))
-selected_tile_texture.fill(pygame.Color(200,200,200))
-board_texture.fill(pygame.Color(128,128,128)) # Fill with red to test visibilty
+
+
+
+
+
+
+tile_texture.fill(globals.default_tile_colour)
+selected_tile_texture.fill(globals.selected_tile_colour)
+board_texture.fill(globals.board_background_color) # Fill with red to test visibilty
 text_color = pygame.Color(0,0,0)
 
 # Selected tile coordinate in the grid ranging from 0-8
@@ -90,7 +95,7 @@ def draw_3x_grid(x,y):
                 text_location_y += tile_font_draw_offset[1]
 
                 # This could be optimised to store the text surfaces so they do not need to be re-rendered every frame
-                rendered_text = font.render(str(tile_text),True,text_color) 
+                rendered_text = globals.tile_font.render(str(tile_text),True,text_color) 
                 board_texture.blit(rendered_text, (text_location_x, text_location_y))
 
 def up_pressed():
