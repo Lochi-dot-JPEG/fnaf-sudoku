@@ -1,8 +1,13 @@
+from os import timerfd_create
+from time import sleep
+from turtle import pos
 import pygame
 
 
+
+# TODO store all colours, fonts and stuff globally in an import
 defaultFontColor = (255, 255, 255)
-button_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 24)
+button_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 20)
 
 # Button class that extends the pygame.sprite.Sprite class for visible game objects
 # Used for the title screen and ask menu
@@ -11,32 +16,47 @@ class Button():
     # Text shown on the button
     text : str = ""
 
+    pressed : bool = False
     # Surface that the button is rendered to
-    surface : pygame.Surface
+    text_surface : pygame.Surface
+    text_offset = pygame.Vector2(8,2)
+
+    outline_surface : pygame.Surface
+    outline_position : pygame.Vector2
+
+    mouse_rect : pygame.rect.Rect
 
     # Font colour stored as a tuple of three integers
-    font_colour : tuple[int,int,int]
+    #font_colour : tuple[int,int,int]
 
     # Function run when the button is initially created using Button()
-    def __init__(self, position : pygame.Vector2, label : str, font_colour = defaultFontColor, width : int):
+    def __init__(self, position : pygame.Vector2, label : str, font_colour = defaultFontColor, width : int = 200):
         # Sets text variable to the inputted label variable
         self.text = label
 
-        # Creates a sprite, to store the rendered text
-        pygame.sprite.Sprite.__init__(self)
+        self.text_surface = button_font.render(label, True, font_colour)
 
-        # Defaults to red font colour using font_red otherwise makes it white
+        height = 32
 
-        self.image = button_font.render(label, True, font_colour)
+        rect = pygame.rect.Rect(0,0, width,height)
+        self.mouse_rect = pygame.rect.Rect(position.x,position.y, width,height)
+        self.outline_surface = pygame.surface.Surface((width,height));
 
-        # Makes the sprites rect the same as the rendered font image
-        self.rect = self.image.get_rect()
-        # Offsets the x position by the pos x value, removing the width of the buttons rect to center it
-        # This is because it would originate the sprite from the top left corner so you have to account for that
-        self.rect.x = int(position.x - self.rect.w / 2)
-        # Offsets the y position by the pos y value
-        self.rect.y = int(position.y)
+        pygame.draw.rect(self.outline_surface, font_colour, rect, 2)
 
-    def draw(self, surface : pygame.Surface, position : pygame.Vector2):
-        pass
+        self.outline_position = position
+
+    def draw(self, surface : pygame.Surface):
+        # TODO make this only happen when hovered
+
+        mouse_position = pygame.mouse.get_pos()
+        if self.mouse_rect.collidepoint(mouse_position[0], mouse_position[1]):
+            surface.blit(self.outline_surface, self.outline_position)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+                #waiting = True
+                #while waiting:
+                    #print("sleeps")
+                    #waiting = pygame.mouse.get_pressed()[0]
+        surface.blit(self.text_surface, self.outline_position + self.text_offset)
 

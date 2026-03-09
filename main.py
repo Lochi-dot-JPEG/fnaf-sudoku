@@ -22,6 +22,4 @@ while running:
         case _:
             print("Error: Invalid title button pressed")
 
-
-
 pygame.quit()

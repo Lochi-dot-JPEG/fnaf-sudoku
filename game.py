@@ -1,4 +1,3 @@
-from ctypes import Array
 import sudoku
 import pygame
 import button
@@ -11,6 +10,10 @@ pygame.display.set_caption("FNAF Sudoku")
 screen_rect = screen.get_rect()
 
 background = pygame.image.load("assets/office.png")
+title_background = pygame.image.load("assets/title.png")
+title_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 40)
+title_text = pygame.surface.Surface(window_size)
+title_text_lines = ["Five", "Nights", "at Freddy’s:", "Sudoku"]
 
 default_background_rect = screen.get_rect() # TODO change to only store the x and y positions because height and width are ignored
 
@@ -32,7 +35,10 @@ class Result:
     # For deaths it is how long they survived
     time = 0.0
 
-def draw_background():
+def draw_title_background():
+    screen.blit(title_background, (0,0))
+
+def draw_game_background():
     draw_rect = default_background_rect.copy()
 
     mouse_offset_from_center_x = (pygame.mouse.get_pos()[0]- screen_rect.width/2)
@@ -55,19 +61,14 @@ def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 
 def handle_input():
-    # Access the running from outside of out the context of the function
-    global running
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-                return
-
             sudoku.key_pressed(event)
 
         # pygame.QUIT event means the user clicked X to close your window
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            exit()
 
 
 def play() -> Result:
@@ -80,7 +81,7 @@ def play() -> Result:
         handle_input()
         # fill the screen with a color to wipe away anything from last frame
 
-        draw_background()
+        draw_game_background()
         sudoku.draw_board(screen)
         # flip() the display to put your work on screen
         pygame.display.flip()
@@ -98,22 +99,50 @@ def play() -> Result:
 
 
 def show_title(inputs: list[str]) -> str:
-    print("Shows title")
-    return inputs[0] # Temporarily acts as if first button is pressed
+    result = ask("", inputs, True)
+    return result
 
 
-def ask(question: str, inputs: list[str]) -> str:
+def ask(question: str, inputs: list[str], title_decoration = False) -> str:
     ask_buttons : list[button.Button] = []
-    start_y = 200
-    gap = 30
-    x_position = 40
-    pygame.rect.Rect(1,2,3,3)
+    start_y = 220
+    gap = 40
+    ask_pos = pygame.Vector2(16,16)
+    x_position = 16
+    ask_text = button.button_font.render(question, True, button.defaultFontColor)
 
     for i in range(inputs.__len__()):
         button_position = pygame.Vector2(x_position, start_y + gap * i)
         label = inputs[i] 
-        new_button = button.Button(button_position , label)
+        new_button = button.Button(button_position, label)
+        ask_buttons.append(new_button)
 
-    print("Asks question")
-    return inputs[0]# Temporarily acts as if first button is pressed
+    result = ""
+    while result == "":
+        draw_title_background()
+
+        # TODO wrap this in a separate function that doesnt interfere with grid code
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return("_quit")
+                    
+        for b in ask_buttons:
+            b.draw(screen)
+
+            if b.pressed:
+                result = b.text
+        screen.blit(ask_text, ask_pos)
+        if title_decoration:
+            i = 0
+            for line in title_text_lines:
+                rendered_font = title_font.render(line, True, button.defaultFontColor)
+                screen.blit(rendered_font, (x_position,48 * i))
+                i += 1
+
+        pygame.display.flip()
+        clock.tick(60)
+
+
+    return result
 
