@@ -54,9 +54,5 @@ class Button():
             surface.blit(self.outline_surface, self.outline_position)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
-                #waiting = True
-                #while waiting:
-                    #print("sleeps")
-                    #waiting = pygame.mouse.get_pressed()[0]
         surface.blit(self.text_surface, self.outline_position + self.text_offset)
 

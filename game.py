@@ -118,7 +118,11 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
         ask_buttons.append(new_button)
 
     result = ""
+    # Where the result is stored while waiting for the player to release the mouse button
+    can_click = False
     while result == "":
+        if not pygame.mouse.get_pressed()[0]:
+            can_click = True
         draw_title_background()
 
         # TODO wrap this in a separate function that doesnt interfere with grid code
@@ -130,8 +134,13 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
         for b in ask_buttons:
             b.draw(screen)
 
-            if b.pressed:
-                result = b.text
+            if can_click:
+                if b.pressed:
+                    result = b.text
+            else:
+                b.pressed = False
+
+
         screen.blit(ask_text, ask_pos)
         if title_decoration:
             i = 0
