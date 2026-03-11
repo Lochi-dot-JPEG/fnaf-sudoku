@@ -1,24 +1,27 @@
+from typing import List
 import pygame
+import random
 import globals
 
-# 2 dimensional list that stores the state of the board, with each
+# 2 dimensional list that stores the state of the board, accessible through board_state[x][y]
 board_state = [
-        [0,1,0,2,0,0,0,0,0],
-        [0,0,0,0,3,0,0,0,0],
-        [0,0,0,0,0,4,0,0,0],
-        [0,0,0,0,0,0,5,0,0],
-        [0,0,0,5,0,0,0,6,0],
-        [0,0,0,0,0,0,0,0,7],
-        [8,0,0,0,0,0,0,0,0],
-        [0,9,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0],
 ]
+locked_squares = []
 
 tile_font_draw_offset = (5,0)
 
-# Load font to draw numbers with
-pygame.init()
-
+failed_rows : List[int] = []
+failed_columns : List[int] = []
+failed_squares : List[pygame.Vector2] = []
 
 # The size of each small tile where numbers are entered
 grid_tile_size = 20
@@ -37,24 +40,31 @@ board_texture_size = (board_length, board_length)
 board_texture = pygame.Surface(board_texture_size)
 tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 selected_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
-
-# Colours
-
-
-
-
-
-
+locked_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 
 tile_texture.fill(globals.default_tile_colour)
 selected_tile_texture.fill(globals.selected_tile_colour)
-board_texture.fill(globals.board_background_color) # Fill with red to test visibilty
-text_color = pygame.Color(0,0,0)
+board_texture.fill(globals.board_background_color)
+locked_tile_texture.fill(globals.locked_tile_colour)
 
 # Selected tile coordinate in the grid ranging from 0-8
 # Initial values are 4 to center
 selected_tile_x = 4
 selected_tile_y = 4
+
+
+def initialise_board():
+    new_state = get_random_puzzle()
+    index = 0
+    for y in range(9):
+        for x in range(9):
+            value = int(new_state[index])
+            board_state[x][y] = value
+            if (value != 0):
+                locked_squares.append((x,y))
+            index += 1
+    board_changed()
+
 
 
 def draw_board(screen : pygame.Surface):
@@ -75,7 +85,6 @@ def draw_3x_grid(x,y):
     x_origin = x * large_grid_size
     y_origin = y * large_grid_size
 
-
     for tile_x in range(3):
         for tile_y in range(3):
             total_x_position = tile_x + x * 3 
@@ -84,10 +93,12 @@ def draw_3x_grid(x,y):
             draw_location = (x_origin + tile_x * (grid_tile_size + small_gap), y_origin + tile_y * (grid_tile_size + small_gap))
             if total_x_position == selected_tile_x and total_y_position == selected_tile_y:
                 board_texture.blit(selected_tile_texture, draw_location)
+            elif (total_x_position,total_y_position) in locked_squares:
+                board_texture.blit(locked_tile_texture, draw_location)
             else:
                 board_texture.blit(tile_texture, draw_location)
 
-            tile_text = board_state[total_y_position][total_x_position]
+            tile_text = board_state[total_x_position][total_y_position]
             if tile_text != 0:
                 text_location_x = draw_location[0]
                 text_location_y = draw_location[1]
@@ -95,7 +106,7 @@ def draw_3x_grid(x,y):
                 text_location_y += tile_font_draw_offset[1]
 
                 # This could be optimised to store the text surfaces so they do not need to be re-rendered every frame
-                rendered_text = globals.tile_font.render(str(tile_text),True,text_color) 
+                rendered_text = globals.tile_font.render(str(tile_text),True,globals.tile_text_color) 
                 board_texture.blit(rendered_text, (text_location_x, text_location_y))
 
 def up_pressed():
@@ -126,14 +137,16 @@ def right_pressed():
         selected_tile_x = 8
 
 def key_pressed(event):
-    if event.key == pygame.K_LEFT:
+# Moving selection with arrows or wasd
+    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
         left_pressed()
-    elif event.key == pygame.K_RIGHT:
+    elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
         right_pressed()
-    elif event.key == pygame.K_UP:
+    elif event.key == pygame.K_UP or event.key == pygame.K_w:
         up_pressed()
-    elif event.key == pygame.K_DOWN:
+    elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
         down_pressed()
+# Clear inputting numbers into squares
     elif event.key == pygame.K_1:
         input_number(1)
     elif event.key == pygame.K_2:
@@ -152,8 +165,74 @@ def key_pressed(event):
         input_number(8)
     elif event.key == pygame.K_9:
         input_number(9)
+    elif event.key == pygame.K_BACKSPACE: # Clear grid square
+        input_number(0)
+
+
+def board_changed():
+    failed_rows = check_rows()
+    failed_columns = check_columns()
+    failed_squares = check_squares()
+
+
+def check_rows() -> List[int]:
+    fails = []
+    for y in range(9):
+        row_values = []
+        for x in range(9):
+            row_values.append(board_state[x][y])
+
+        if not (0 in row_values):
+            if not check_all_unique(row_values):
+                fails.append(y)
+
+    return fails
+
+
+def check_columns() -> List[int]:
+    fails = []
+    for x in range(9):
+        column_values = board_state[x]
+        if not (0 in column_values):
+            if not check_all_unique(column_values):
+                fails.append(x)
+
+    return fails
+
+
+def check_squares() -> List[pygame.Vector2]:
+    fails : List[pygame.Vector2] = []
+
+    for square_x in range(3):
+        for square_y in range(3):
+            square_values = []
+            for x in range(3):
+                for y in range(3):
+                    square_values.append(board_state[square_x * 3 + x][square_y * 3 + y])
+
+            if not (0 in square_values):
+                if not check_all_unique(square_values):
+                    fails.append(pygame.Vector2(square_x, square_y))
+
+    return fails
+
+
+def check_all_unique(numbers : List[int]) -> bool:
+    for i in range(1,10):
+        if numbers.count(i) != 1:
+            return False
+    return True
 
 
 def input_number(value):
-    board_state[selected_tile_y][selected_tile_x] = value
-    
+    if not ((selected_tile_x, selected_tile_y) in locked_squares):
+        board_state[selected_tile_x][selected_tile_y] = value
+    board_changed()
+
+def get_random_puzzle() -> str:
+    lines = []
+    filename = "assets/puzzles.txt"
+    with open(filename, "r") as file:
+        lines = [line.rstrip() for line in file]
+
+    return random.choice(lines)

@@ -14,6 +14,7 @@ background = pygame.image.load("assets/office.png")
 title_background = pygame.image.load("assets/title.png")
 title_text = pygame.surface.Surface(window_size)
 title_text_lines = ["Five", "Nights", "at Freddy’s:", "Sudoku"]
+shah_logo = pygame.image.load("assets/logosmall.png")
 
 default_background_rect = screen.get_rect() # TODO change to only store the x and y positions because height and width are ignored
 
@@ -77,18 +78,13 @@ def play() -> Result:
     # Whether the game should loop for another frame
     playing = True
 
+    sudoku.initialise_board()
     while playing:
         handle_input()
-        # fill the screen with a color to wipe away anything from last frame
-
         draw_game_background()
         sudoku.draw_board(screen)
-        # flip() the display to put your work on screen
-        pygame.display.flip()
-
+        pygame.display.flip() # update the display
         clock.tick(60)  # limits FPS to 60
-
-
 
     # Pass game result to the return of the function
     result = Result()
@@ -98,14 +94,10 @@ def play() -> Result:
 
 
 
-def show_title(inputs: list[str]) -> str:
-    result = ask("", inputs, True)
-    return result
-
 
 def ask(question: str, inputs: list[str], title_decoration = False) -> str:
     ask_buttons : list[button.Button] = []
-    start_y = 220
+    start_y = 165
     gap = 40
     ask_pos = pygame.Vector2(16,16)
     x_position = 16
@@ -125,13 +117,14 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
             can_click = True
         draw_title_background()
 
-        # TODO wrap this in a separate function that doesnt interfere with grid code
+        # Handle closing the window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                     pygame.quit()
                     return("_quit")
-                    
+
         for b in ask_buttons:
+            b.update_hover()
             b.draw(screen)
 
             if can_click:
@@ -140,18 +133,18 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
             else:
                 b.pressed = False
 
-
+        # Draw the question
         screen.blit(ask_text, ask_pos)
+
         if title_decoration:
             i = 0
             for line in title_text_lines:
                 rendered_font = globals.title_font.render(line, True, globals.defaultFontColor)
-                screen.blit(rendered_font, (x_position,48 * i))
+                screen.blit(rendered_font, (x_position,40 * i))
                 i += 1
-
+            screen.blit(shah_logo, (16, 280))
         pygame.display.flip()
         clock.tick(60)
-
 
     return result
 

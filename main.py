@@ -7,17 +7,18 @@ import player_management
 # pygame setup
 running = True
 
-title_options = ["Play Game", "Tutorial"]
+title_options = ["Play Game", "Tutorial", "Quit"]
 
 while running:
 
-    selected_title_button = game.show_title(title_options)
+    selected_title_button = game.ask("", title_options, True)
     match selected_title_button:
         case "Play Game":
             player_management.run_game()
         case "Tutorial":
             pass
-        case _:
-            print("Error: Invalid title button pressed")
+        case _: # This option will run when quit is pressed or an error occurs in ask e.g. player quitting
+            running = False
+
 
 pygame.quit()
