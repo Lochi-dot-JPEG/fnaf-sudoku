@@ -5,6 +5,7 @@ locked_tile_colour = (83, 90, 102)
 default_tile_colour = (42, 49, 54)
 selected_tile_colour = (20, 27, 32)
 board_background_color = (153, 185, 207)
+error_tile_color = (140, 40, 57)
 
 tile_text_color = (170, 202, 224)
 tile_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 16)

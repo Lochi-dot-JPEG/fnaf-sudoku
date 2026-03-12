@@ -2,32 +2,16 @@ import sudoku
 import pygame
 import button
 import globals
+import horror
+import screen
 
-window_size = (640,360)
-clock = pygame.time.Clock()
-flags = pygame.SCALED | pygame.RESIZABLE #| pygame.FULLSCREEN
-screen = pygame.display.set_mode(window_size, flags)
-pygame.display.set_caption("FNAF Sudoku")
-screen_rect = screen.get_rect()
 
-background = pygame.image.load("assets/office.png")
 title_background = pygame.image.load("assets/title.png")
-title_text = pygame.surface.Surface(window_size)
+title_text = pygame.surface.Surface(screen.window_size)
 title_text_lines = ["Five", "Nights", "at Freddy’s:", "Sudoku"]
 shah_logo = pygame.image.load("assets/logosmall.png")
 
-default_background_rect = screen.get_rect() # TODO change to only store the x and y positions because height and width are ignored
-
-# The amount of pixels on the border of the background along the y axis
-background_padding_y = int((background.get_height() - screen_rect.height)/2)
-
-# The amount of pixels on the border of the background along the x axis
-background_padding_x = int((background.get_width() - screen_rect.width)/2)
-
-default_background_rect.x -= background_padding_x
-default_background_rect.y -= background_padding_y
-# Amount of pixel the mouse has to move to pan the background by 1 pixel, negative values reverse direction of movement
-background_pan = -20
+clock = pygame.time.Clock()
 
 class Result:
     survived = True
@@ -37,29 +21,10 @@ class Result:
     time = 0.0
 
 def draw_title_background():
-    screen.blit(title_background, (0,0))
-
-def draw_game_background():
-    draw_rect = default_background_rect.copy()
-
-    mouse_offset_from_center_x = (pygame.mouse.get_pos()[0]- screen_rect.width/2)
-    mouse_offset_from_center_y = (pygame.mouse.get_pos()[1]- screen_rect.height/2)
-
-    # Convert to integer because drawing rectangles only use full pixels and store their values as int
-    offset_bg_x = int(mouse_offset_from_center_x / background_pan)
-    offset_bg_y = int(mouse_offset_from_center_y / background_pan)
-    offset_bg_x = clamp(offset_bg_x, -background_padding_x, background_padding_x)
-    offset_bg_y = clamp(offset_bg_y, -background_padding_y, background_padding_y)
-
-    draw_rect.x += offset_bg_x
-    draw_rect.y += offset_bg_y
-
-    # Prevent the background from panning outside of the edge of the image
-    screen.blit(background, draw_rect)
+    screen.screen.blit(title_background, (0,0))
 
 
-def clamp(value, minimum, maximum):
-    return max(minimum, min(value, maximum))
+
 
 def handle_input():
     for event in pygame.event.get():
@@ -81,8 +46,8 @@ def play() -> Result:
     sudoku.initialise_board()
     while playing:
         handle_input()
-        draw_game_background()
-        sudoku.draw_board(screen)
+        horror.draw_game_background()
+        sudoku.draw_board(screen.screen)
         pygame.display.flip() # update the display
         clock.tick(60)  # limits FPS to 60
 
@@ -125,7 +90,7 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
 
         for b in ask_buttons:
             b.update_hover()
-            b.draw(screen)
+            b.draw(screen.screen)
 
             if can_click:
                 if b.pressed:
@@ -134,15 +99,15 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
                 b.pressed = False
 
         # Draw the question
-        screen.blit(ask_text, ask_pos)
+        screen.screen.blit(ask_text, ask_pos)
 
         if title_decoration:
             i = 0
             for line in title_text_lines:
                 rendered_font = globals.title_font.render(line, True, globals.defaultFontColor)
-                screen.blit(rendered_font, (x_position,40 * i))
+                screen.screen.blit(rendered_font, (x_position,40 * i))
                 i += 1
-            screen.blit(shah_logo, (16, 280))
+            screen.screen.blit(shah_logo, (16, 280))
         pygame.display.flip()
         clock.tick(60)
 

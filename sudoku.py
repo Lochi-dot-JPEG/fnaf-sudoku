@@ -40,10 +40,12 @@ board_texture_size = (board_length, board_length)
 board_texture = pygame.Surface(board_texture_size)
 tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 selected_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
+error_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 locked_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 
 tile_texture.fill(globals.default_tile_colour)
 selected_tile_texture.fill(globals.selected_tile_colour)
+error_tile_texture.fill(globals.error_tile_color)
 board_texture.fill(globals.board_background_color)
 locked_tile_texture.fill(globals.locked_tile_colour)
 
@@ -67,10 +69,7 @@ def initialise_board():
 
 
 
-def draw_board(screen : pygame.Surface):
-    center = (screen.get_width()/2,screen.get_height() / 2 )
-    origin = (int(center[0] - board_length / 2), int(center[1] - board_length / 2))
-
+def update_board_texture():
     # Draw the large grid areas
     # Cycle through the x coordinates from 0-2
     for x in range(3):
@@ -78,6 +77,9 @@ def draw_board(screen : pygame.Surface):
         for y in range(3):
             draw_3x_grid(x,y)
 
+def draw_board(screen : pygame.Surface):
+    center = (screen.get_width()/2,screen.get_height() / 2 )
+    origin = (int(center[0] - board_length / 2), int(center[1] - board_length / 2))
     screen.blit(board_texture, origin)
 
 
@@ -85,16 +87,21 @@ def draw_3x_grid(x,y):
     x_origin = x * large_grid_size
     y_origin = y * large_grid_size
 
+    # Coordinate of the 3x3 square to be compared to any errors in failed_squares
+    square = pygame.Vector2(x,y)
     for tile_x in range(3):
         for tile_y in range(3):
             total_x_position = tile_x + x * 3 
             total_y_position = tile_y + y * 3 
 
             draw_location = (x_origin + tile_x * (grid_tile_size + small_gap), y_origin + tile_y * (grid_tile_size + small_gap))
+
             if total_x_position == selected_tile_x and total_y_position == selected_tile_y:
                 board_texture.blit(selected_tile_texture, draw_location)
             elif (total_x_position,total_y_position) in locked_squares:
                 board_texture.blit(locked_tile_texture, draw_location)
+            elif total_y_position in failed_rows or total_x_position in failed_columns or square in failed_squares:
+                board_texture.blit(error_tile_texture, draw_location)
             else:
                 board_texture.blit(tile_texture, draw_location)
 
@@ -114,6 +121,7 @@ def up_pressed():
     selected_tile_y -= 1
     if selected_tile_y < 0:
         selected_tile_y = 0
+    update_board_texture()
 
 
 def down_pressed():
@@ -121,6 +129,7 @@ def down_pressed():
     selected_tile_y += 1
     if selected_tile_y > 8:
         selected_tile_y = 8
+    update_board_texture()
 
 
 def left_pressed():
@@ -128,6 +137,7 @@ def left_pressed():
     selected_tile_x -= 1
     if selected_tile_x < 0:
         selected_tile_x = 0
+    update_board_texture()
 
 
 def right_pressed():
@@ -135,6 +145,7 @@ def right_pressed():
     selected_tile_x += 1
     if selected_tile_x > 8:
         selected_tile_x = 8
+    update_board_texture()
 
 def key_pressed(event):
 # Moving selection with arrows or wasd
@@ -170,9 +181,13 @@ def key_pressed(event):
 
 
 def board_changed():
+    global failed_rows
+    global failed_columns
+    global failed_squares
     failed_rows = check_rows()
     failed_columns = check_columns()
     failed_squares = check_squares()
+    update_board_texture()
 
 
 def check_rows() -> List[int]:
@@ -185,7 +200,6 @@ def check_rows() -> List[int]:
         if not (0 in row_values):
             if not check_all_unique(row_values):
                 fails.append(y)
-
     return fails
 
 
@@ -196,7 +210,6 @@ def check_columns() -> List[int]:
         if not (0 in column_values):
             if not check_all_unique(column_values):
                 fails.append(x)
-
     return fails
 
 
@@ -213,7 +226,6 @@ def check_squares() -> List[pygame.Vector2]:
             if not (0 in square_values):
                 if not check_all_unique(square_values):
                     fails.append(pygame.Vector2(square_x, square_y))
-
     return fails
 
 
