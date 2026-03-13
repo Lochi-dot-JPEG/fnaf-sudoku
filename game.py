@@ -36,10 +36,6 @@ def handle_input():
 
         elif event.type == pygame.KEYDOWN:
             sudoku.key_pressed(event)
-            if event.key == pygame.K_m:
-                horror.close_door_right()
-            if event.key == pygame.K_n:
-                horror.close_door_left()
 
         # pygame.QUIT event means the user clicked X to close your window
         if event.type == pygame.QUIT:

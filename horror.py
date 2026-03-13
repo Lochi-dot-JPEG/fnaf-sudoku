@@ -9,11 +9,15 @@ left_animatronic_image = pygame.image.load("assets/bonnie.png")
 left_door_image = pygame.image.load("assets/doorleft.png")
 left_door_close = 1.0
 
+left_button_bounds = pygame.rect.Rect(3,163,33,110)
+
 right_door_pos = pygame.Vector2(529,89)
 right_animatronic_pos = pygame.Vector2(529,89)
 right_animatronic_image = pygame.image.load("assets/freddy.png")
 right_door_image = pygame.image.load("assets/doorright.png")
 right_door_close = 1.0
+
+right_button_bounds = pygame.rect.Rect(609,163,40,110)
 
 door_close_length = 5.0
 animatronic_max_distance = 120
@@ -87,7 +91,11 @@ def close_door_right():
     right_animatronic_distance = random.randrange(animatronic_min_distance, animatronic_max_distance)
 
 def click():
-    pass
+    mouse_position = pygame.mouse.get_pos()
+    if left_button_bounds.collidepoint(mouse_position - background_draw_offset):
+        close_door_left()
+    if right_button_bounds.collidepoint(mouse_position - background_draw_offset):
+        close_door_right()
 
 
 def draw_animatronics():

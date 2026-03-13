@@ -1,7 +1,6 @@
 import pygame
 import random
 import globals
-import horror
 
 # 2 dimensional list that stores the state of the board, accessible through board_state[x][y]
 board_state = [
@@ -86,9 +85,9 @@ def click_tile(screen) -> bool:
 
     hovered = (int(position_on_grid[0]/ (grid_tile_size + small_gap)), int(position_on_grid[1]/ (grid_tile_size + small_gap)))
 
-    if hovered[0] > 8 or hovered[1] < 0:
+    if hovered[0] > 8 or hovered[0] < 0:
         return False
-    if hovered[0] > 8 or hovered[1] < 0:
+    if hovered[1] > 8 or hovered[1] < 0:
         return False
 
     global selected_tile_x 
