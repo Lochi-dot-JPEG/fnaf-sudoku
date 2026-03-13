@@ -49,8 +49,6 @@ def draw_game_background():
 
     mouse_offset_from_center_x = (screen.pygame.mouse.get_pos()[0]- screen.screen_rect.width/2)
     mouse_offset_from_center_y = (screen.pygame.mouse.get_pos()[1]- screen.screen_rect.height/2)
-    print(mouse_offset_from_center_x)
-    print(mouse_offset_from_center_y)
 
     # Convert to integer because drawing rectangles only use full pixels and store their values as int
     offset_bg_x = int(mouse_offset_from_center_x / background_pan)
@@ -88,6 +86,8 @@ def close_door_right():
     right_door_close = door_close_length
     right_animatronic_distance = random.randrange(animatronic_min_distance, animatronic_max_distance)
 
+def click():
+    pass
 
 
 def draw_animatronics():

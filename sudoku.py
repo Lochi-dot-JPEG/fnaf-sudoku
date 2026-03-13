@@ -1,7 +1,7 @@
-from typing import List
 import pygame
 import random
 import globals
+import horror
 
 # 2 dimensional list that stores the state of the board, accessible through board_state[x][y]
 board_state = [
@@ -19,14 +19,14 @@ locked_squares = []
 
 tile_font_draw_offset = (5,0)
 
-failed_rows : List[int] = []
-failed_columns : List[int] = []
-failed_squares : List[pygame.Vector2] = []
+failed_rows : list[int] = []
+failed_columns : list[int] = []
+failed_squares : list[pygame.Vector2] = []
 
 # The size of each small tile where numbers are entered
 grid_tile_size = 20
 # The gap between each set of three grid squares
-large_gap = 4
+large_gap = 2
 # The gap between each grid square
 small_gap = 1
 
@@ -65,6 +65,7 @@ def initialise_board():
             if (value != 0):
                 locked_squares.append((x,y))
             index += 1
+
     board_changed()
 
 
@@ -77,9 +78,34 @@ def update_board_texture():
         for y in range(3):
             draw_3x_grid(x,y)
 
-def draw_board(screen : pygame.Surface):
+def click_tile(screen) -> bool:
+    mouse_position = pygame.mouse.get_pos()
+
+    origin = get_origin_on_screen(screen)
+    position_on_grid = (mouse_position[0] - origin[0], mouse_position[1] - origin[1])
+
+    hovered = (int(position_on_grid[0]/ (grid_tile_size + small_gap)), int(position_on_grid[1]/ (grid_tile_size + small_gap)))
+
+    if hovered[0] > 8 or hovered[1] < 0:
+        return False
+    if hovered[0] > 8 or hovered[1] < 0:
+        return False
+
+    global selected_tile_x 
+    global selected_tile_y 
+    selected_tile_x = hovered[0]
+    selected_tile_y = hovered[1]
+    update_board_texture()
+    return True
+
+
+def get_origin_on_screen(screen : pygame.Surface) -> tuple[int,int]:
     center = (screen.get_width()/2,screen.get_height() / 2 )
-    origin = (int(center[0] - board_length / 2), int(center[1] - board_length / 2))
+    return (int(center[0] - board_length / 2), int(center[1] - board_length / 2))
+
+
+def draw_board(screen : pygame.Surface):
+    origin = get_origin_on_screen(screen)
     screen.blit(board_texture, origin)
 
 
@@ -147,6 +173,8 @@ def right_pressed():
         selected_tile_x = 8
     update_board_texture()
 
+
+
 def key_pressed(event):
 # Moving selection with arrows or wasd
     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -190,7 +218,7 @@ def board_changed():
     update_board_texture()
 
 
-def check_rows() -> List[int]:
+def check_rows() -> list[int]:
     fails = []
     for y in range(9):
         row_values = []
@@ -203,7 +231,7 @@ def check_rows() -> List[int]:
     return fails
 
 
-def check_columns() -> List[int]:
+def check_columns() -> list[int]:
     fails = []
     for x in range(9):
         column_values = board_state[x]
@@ -213,8 +241,8 @@ def check_columns() -> List[int]:
     return fails
 
 
-def check_squares() -> List[pygame.Vector2]:
-    fails : List[pygame.Vector2] = []
+def check_squares() -> list[pygame.Vector2]:
+    fails : list[pygame.Vector2] = []
 
     for square_x in range(3):
         for square_y in range(3):
@@ -229,7 +257,7 @@ def check_squares() -> List[pygame.Vector2]:
     return fails
 
 
-def check_all_unique(numbers : List[int]) -> bool:
+def check_all_unique(numbers : list[int]) -> bool:
     for i in range(1,10):
         if numbers.count(i) != 1:
             return False

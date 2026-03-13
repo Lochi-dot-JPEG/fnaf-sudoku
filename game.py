@@ -28,7 +28,13 @@ def draw_title_background():
 
 def handle_input():
     for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            used = sudoku.click_tile(screen.screen)
+            if not used:
+                horror.click()
+
+        elif event.type == pygame.KEYDOWN:
             sudoku.key_pressed(event)
             if event.key == pygame.K_m:
                 horror.close_door_right()
