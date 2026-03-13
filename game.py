@@ -30,6 +30,10 @@ def handle_input():
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             sudoku.key_pressed(event)
+            if event.key == pygame.K_m:
+                horror.close_door_right()
+            if event.key == pygame.K_n:
+                horror.close_door_left()
 
         # pygame.QUIT event means the user clicked X to close your window
         if event.type == pygame.QUIT:
@@ -46,7 +50,9 @@ def play() -> Result:
     sudoku.initialise_board()
     while playing:
         handle_input()
+        horror.update(1.0/60.0)
         horror.draw_game_background()
+        horror.draw_animatronics()
         sudoku.draw_board(screen.screen)
         pygame.display.flip() # update the display
         clock.tick(60)  # limits FPS to 60
