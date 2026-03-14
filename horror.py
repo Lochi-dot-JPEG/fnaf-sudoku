@@ -27,8 +27,8 @@ right_door_close = 1.0
 right_button_bounds = pygame.rect.Rect(609,163,40,110)
 
 door_close_length = 5.0
-animatronic_max_distance = 100
-animatronic_min_distance = 30
+animatronic_max_distance = 10
+animatronic_min_distance = 8
 
 default_background_rect = screen.screen_rect 
 

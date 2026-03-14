@@ -4,6 +4,7 @@ import button
 import globals
 import horror
 import screen
+import ui
 
 
 
@@ -63,9 +64,11 @@ def play() -> Result:
                 horror.jumpscare(False)
             survived = False
             playing = False
+            ui.announce(["You got caught..."])
         if sudoku.completed:
             survived = True
             playing = False
+            ui.announce(["You survived the night!"])
 
 
 

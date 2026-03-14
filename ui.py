@@ -65,7 +65,8 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
     return result
 
 def announce(text : list[str]):
-    announcing = 5000
+    # Milliseconds announcing the text for
+    announcing = 4000
 
     line_count = text.__len__()
     rendered_texts = []
@@ -85,7 +86,6 @@ def announce(text : list[str]):
             can_click = True
 
         screen.screen.fill((0,0,0))
-        screen.screen.blit(title_background, (100,0))
 
         # Handle closing the window
         for event in pygame.event.get():
