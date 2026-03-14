@@ -8,6 +8,7 @@ title_text = pygame.surface.Surface(screen.window_size)
 title_text_lines = ["Five", "Nights", "at Freddy’s:", "Sudoku"]
 
 shah_logo = pygame.image.load("assets/logosmall.png")
+
 def draw_title_background():
     screen.screen.blit(title_background, (0,0))
 
@@ -82,15 +83,10 @@ def announce(text : list[str]):
         rendered_positions.append(rendered_text_position)
 
     while announcing > 0:
-        if not pygame.mouse.get_pressed()[0]:
-            can_click = True
-
         screen.screen.fill((0,0,0))
 
         # Handle closing the window
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                announcing = 0
             if event.type == pygame.QUIT:
                     pygame.quit()
                     return("_quit")
