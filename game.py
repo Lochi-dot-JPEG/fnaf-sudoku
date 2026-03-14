@@ -68,7 +68,7 @@ def play() -> Result:
         if sudoku.completed:
             survived = True
             playing = False
-            ui.announce(["You survived the night!"])
+            ui.announce(["You Survived the Night"])
 
 
 

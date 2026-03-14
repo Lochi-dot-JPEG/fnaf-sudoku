@@ -10,21 +10,21 @@ jumpscare_sheet_right_frames = 28
 jumpscare_sheet_left = pygame.image.load("assets/bonnie_jumpsheet.jpg")
 jumpscare_sheet_left_frames = 11
 background = pygame.image.load("assets/office.png")
-left_door_pos = pygame.Vector2(41,69)
-left_animatronic_pos = pygame.Vector2(41,89)
+left_door_pos = pygame.Vector2(58,59)
+left_animatronic_pos = pygame.Vector2(56,89)
 left_animatronic_image = pygame.image.load("assets/bonnie.png")
 left_door_image = pygame.image.load("assets/doorleft.png")
 left_door_close = 1.0
 caught : str = ""
-left_button_bounds = pygame.rect.Rect(3,163,33,110)
+left_button_bounds = pygame.rect.Rect(6,163,40,110)
 
-right_door_pos = pygame.Vector2(529,89)
-right_animatronic_pos = pygame.Vector2(529,89)
+right_door_pos = pygame.Vector2(545,59)
+right_animatronic_pos = pygame.Vector2(555,89)
 right_animatronic_image = pygame.image.load("assets/freddy.png")
 right_door_image = pygame.image.load("assets/doorright.png")
 right_door_close = 1.0
 
-right_button_bounds = pygame.rect.Rect(609,163,40,110)
+right_button_bounds = pygame.rect.Rect(623,163,40,110)
 
 door_close_length = 5.0
 animatronic_max_distance = 10
@@ -56,10 +56,16 @@ def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 
 def new_game():
+    global left_animatronic_distance 
+    global right_animatronic_distance 
+    global left_door_close 
+    global right_door_close 
     global caught
     caught = ""
-    close_door_left()
-    close_door_right()
+    left_animatronic_distance = random.randrange(animatronic_min_distance, animatronic_max_distance)
+    right_animatronic_distance = random.randrange(animatronic_min_distance, animatronic_max_distance)
+    left_door_close = 0
+    right_door_close = 0
 
 
 def draw_game_background():
@@ -74,8 +80,8 @@ def draw_game_background():
     offset_bg_x = clamp(offset_bg_x, -background_padding_x, background_padding_x)
     offset_bg_y = clamp(offset_bg_y, -background_padding_y, background_padding_y)
 
-    background_draw_offset.x = offset_bg_x
-    background_draw_offset.y = offset_bg_y
+    background_draw_offset.x = offset_bg_x + default_background_rect.x
+    background_draw_offset.y = offset_bg_y+ default_background_rect.y
 
     # Prevent the background from panning outside of the edge of the image
     screen.screen.blit(background, background_draw_offset)

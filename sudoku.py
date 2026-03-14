@@ -14,6 +14,9 @@ board_state = [
         [0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0],
 ]
+
+monitor = pygame.image.load("assets/monitor.png")
+monitor.set_colorkey((0,255,0))
 locked_squares : list[tuple[int,int]]= []
 completed = False
 
@@ -116,6 +119,7 @@ def get_origin_on_screen(screen : pygame.Surface) -> tuple[int,int]:
 
 def draw_board(screen : pygame.Surface):
     origin = get_origin_on_screen(screen)
+    screen.blit(monitor, (origin[0]- 45,origin[1] - 50))
     screen.blit(board_texture, origin)
 
 
