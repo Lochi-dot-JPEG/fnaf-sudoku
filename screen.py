@@ -1,5 +1,7 @@
 import pygame 
 
+clock = pygame.time.Clock()
+
 window_size = (640,360)
 flags = pygame.SCALED | pygame.RESIZABLE #| pygame.FULLSCREEN
 

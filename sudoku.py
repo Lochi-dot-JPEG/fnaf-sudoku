@@ -14,7 +14,8 @@ board_state = [
         [0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0],
 ]
-locked_squares = []
+locked_squares : list[tuple[int,int]]= []
+completed = False
 
 tile_font_draw_offset = (5,0)
 
@@ -56,6 +57,8 @@ selected_tile_y = 4
 
 def initialise_board():
     new_state = get_random_puzzle()
+    global completed
+    completed = False
     index = 0
     for y in range(9):
         for x in range(9):
@@ -76,6 +79,14 @@ def update_board_texture():
         # Cycle through the y coordinates from 0-2
         for y in range(3):
             draw_3x_grid(x,y)
+
+    # Check if the grid is completed
+    global completed 
+    completed = True
+    for x in range(9):
+        for y in range(9):
+            if board_state[x][y] == 0:
+                completed = False
 
 def click_tile(screen) -> bool:
     mouse_position = pygame.mouse.get_pos()

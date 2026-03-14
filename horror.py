@@ -2,13 +2,20 @@ import screen
 import pygame
 import random
 
+from ui import draw_title_background
+
+jumpscare_sound = pygame.mixer.Sound("assets/jumpscare.ogg")
+jumpscare_sheet_right = pygame.image.load("assets/freddy_jumpsheet.jpg")
+jumpscare_sheet_right_frames = 28
+jumpscare_sheet_left = pygame.image.load("assets/bonnie_jumpsheet.jpg")
+jumpscare_sheet_left_frames = 11
 background = pygame.image.load("assets/office.png")
 left_door_pos = pygame.Vector2(41,69)
 left_animatronic_pos = pygame.Vector2(41,89)
 left_animatronic_image = pygame.image.load("assets/bonnie.png")
 left_door_image = pygame.image.load("assets/doorleft.png")
 left_door_close = 1.0
-
+caught : str = ""
 left_button_bounds = pygame.rect.Rect(3,163,33,110)
 
 right_door_pos = pygame.Vector2(529,89)
@@ -20,7 +27,7 @@ right_door_close = 1.0
 right_button_bounds = pygame.rect.Rect(609,163,40,110)
 
 door_close_length = 5.0
-animatronic_max_distance = 120
+animatronic_max_distance = 100
 animatronic_min_distance = 30
 
 default_background_rect = screen.screen_rect 
@@ -48,6 +55,13 @@ background_draw_offset = pygame.Vector2(0,0)
 def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 
+def new_game():
+    global caught
+    caught = ""
+    close_door_left()
+    close_door_right()
+
+
 def draw_game_background():
     global background_draw_offset
 
@@ -71,11 +85,21 @@ def update(delta : float):
     global right_animatronic_distance 
     global left_door_close 
     global right_door_close 
-    left_animatronic_distance -= delta
+    global caught
+
+    if left_door_close <= 0:
+        left_animatronic_distance -= delta
+    if right_door_close <= 0:
+        right_animatronic_distance -= delta
+
     left_door_close -= delta
     right_door_close -= delta
-    right_animatronic_distance -= delta
-    
+
+    if left_animatronic_distance < 0:
+        caught = "left"
+    if right_animatronic_distance < 0:
+        caught = "right"
+
 
 def close_door_left():
     global left_door_close
@@ -110,8 +134,23 @@ def draw_animatronics():
         screen.screen.blit(right_door_image, right_door_pos + background_draw_offset)
     elif right_animatronic_distance < animatronic_warning_time:
         alpha = 255 - int((right_animatronic_distance / animatronic_warning_time) * 255)
-        left_animatronic_image.set_alpha(alpha)
+        right_animatronic_image.set_alpha(alpha)
         screen.screen.blit(right_animatronic_image, right_animatronic_pos+ background_draw_offset)
 
+
+def jumpscare(left = False):
+    jumpscare_sound.play()
+    frame_count = jumpscare_sheet_right_frames
+    if left:
+        frame_count = jumpscare_sheet_left_frames
+    for i in range(frame_count):
+        if left:
+            screen.screen.blit(jumpscare_sheet_left, (0,i * -360))
+        else:
+            screen.screen.blit(jumpscare_sheet_right, (0,i * -360))
+
+        pygame.display.flip()
+        screen.clock.tick(15)
+    jumpscare_sound.stop()
 
 
