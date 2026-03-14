@@ -65,7 +65,7 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
     return result
 
 def announce(text : list[str]):
-    announcing = 3000
+    announcing = 5000
 
     line_count = text.__len__()
     rendered_texts = []

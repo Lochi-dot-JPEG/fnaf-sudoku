@@ -13,10 +13,22 @@ def run_game():
     print("Player count is", player_count)
 
     if player_count > 1:
-        results = []
+        results : list[game.Result] = []
         for i in range(player_count):
             ui.announce(["Player " + str(i + 1), "Start!"])
             results.append(game.play())
-
+        announce_best_result(results)
     else:
         game.play()
+
+
+def announce_best_result(results: list[game.Result]):
+    survivors = [i for i, r in enumerate(results) if r.survived]
+    if survivors:
+        # Find the survivor with the shortest time
+        best_idx = min(survivors, key=lambda i: results[i].time)
+        ui.announce(["Player " + str(best_idx + 1), "solved the game fastest!"])
+    else:
+        # Find the player with the longest survival time
+        best_idx = max(range(len(results)), key=lambda i: results[i].time)
+        ui.announce(["Player " + str(best_idx + 1), "survived the longest!"])
