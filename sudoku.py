@@ -48,6 +48,7 @@ locked_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 
 tile_texture.fill(globals.default_tile_colour)
 selected_tile_texture.fill(globals.selected_tile_colour)
+selected_tile_texture.set_alpha(globals.selected_tile_alpha)
 error_tile_texture.fill(globals.error_tile_color)
 board_texture.fill(globals.board_background_color)
 locked_tile_texture.fill(globals.locked_tile_colour)
@@ -62,6 +63,8 @@ def initialise_board():
     new_state = get_random_puzzle()
     global completed
     completed = False
+    global locked_squares
+    locked_squares = []
     index = 0
     for y in range(9):
         for x in range(9):
@@ -136,14 +139,16 @@ def draw_3x_grid(x,y):
 
             draw_location = (x_origin + tile_x * (grid_tile_size + small_gap), y_origin + tile_y * (grid_tile_size + small_gap))
 
-            if total_x_position == selected_tile_x and total_y_position == selected_tile_y:
-                board_texture.blit(selected_tile_texture, draw_location)
-            elif (total_x_position,total_y_position) in locked_squares:
+
+            if (total_x_position,total_y_position) in locked_squares:
                 board_texture.blit(locked_tile_texture, draw_location)
             elif total_y_position in failed_rows or total_x_position in failed_columns or square in failed_squares:
                 board_texture.blit(error_tile_texture, draw_location)
             else:
                 board_texture.blit(tile_texture, draw_location)
+
+            if total_x_position == selected_tile_x and total_y_position == selected_tile_y:
+                board_texture.blit(selected_tile_texture, draw_location)
 
             tile_text = board_state[total_x_position][total_y_position]
             if tile_text != 0:
