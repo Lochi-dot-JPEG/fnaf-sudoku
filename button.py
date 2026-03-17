@@ -28,9 +28,9 @@ class Button():
         self.text = label
         self.text_surface = globals.button_font.render(label, True, font_colour)
 
-        rect = pygame.rect.Rect(0,0, width,button_height)
+        rect = pygame.rect.Rect(0,0, max(width,self.text_surface.get_width() + 16),button_height)
         self.mouse_rect = pygame.rect.Rect(position.x,position.y, width,button_height)
-        self.outline_surface = pygame.surface.Surface((width,button_height));
+        self.outline_surface = pygame.surface.Surface((rect.width,rect.height));
 
         pygame.draw.rect(self.outline_surface, font_colour, rect, 2)
         self.outline_position = position
