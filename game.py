@@ -6,9 +6,6 @@ import horror
 import screen
 import ui
 
-
-
-
 class Result:
     survived = True
     # Amount of time the game ran
@@ -16,19 +13,27 @@ class Result:
     # For deaths it is how long they survived
     time = 0.0
 
-
-
+# Returns whether to keep the game running
+def pause_game():
+    match ui.ask("Game Paused",["Continue", "Accept your fate..."]):
+        case "Accept your fate...":
+            globals.returning_to_title = True
+        case "Continue":
+            pass
+        case _:
+            pass
+            
 
 
 def handle_input():
     for event in pygame.event.get():
-
         if event.type == pygame.MOUSEBUTTONDOWN:
             used = sudoku.click_tile(screen.screen)
             if not used:
                 horror.click()
-
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                pause_game()
             sudoku.key_pressed(event)
 
         # pygame.QUIT event means the user clicked X to close your window
@@ -49,6 +54,10 @@ def play() -> Result:
     horror.new_game()
     while playing:
         handle_input()
+        if globals.returning_to_title:
+            playing = False
+            continue
+        
         horror.update(1.0/60.0)
         horror.draw_game_background()
         horror.draw_animatronics()

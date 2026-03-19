@@ -1,12 +1,13 @@
 import pygame
 # Initialise pygame before importing other modules so fonts can load
 pygame.init()
+# Initialise pygame's sound mixer to enable audio
 pygame.mixer.init()
+# Import necessary modules
 import player_management
 import ui
+import globals
 
-# pygame setup
-running = True
 
 title_options = ["Play Game", "Tutorial", "Quit"]
 
@@ -14,8 +15,10 @@ title_options = ["Play Game", "Tutorial", "Quit"]
 pygame.mixer.music.load("assets/music_box.ogg")
 pygame.mixer.music.play(-1)
 
+running = True
 while running:
 
+    globals.returning_to_title = False
 
     # Display title screen with title decorations enabled
     selected_title_button = ui.ask("", title_options, True)
@@ -26,7 +29,6 @@ while running:
             player_management.run_game()
         case "Tutorial":
             pass
-        case _: # This option will run when quit is pressed or an error occurs in ask e.g. player quitting
+        case _:
+            pygame.quit()
             running = False
-
-pygame.quit()

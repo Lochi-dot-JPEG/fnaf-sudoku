@@ -4,3 +4,5 @@
 - Run in a terminal from the root directory of the project:
 
         python main.py
+
+TODO add terms of use

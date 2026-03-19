@@ -4,11 +4,15 @@ import random
 
 from ui import draw_title_background
 
+# Jumpscare sound loaded from ogg file
 jumpscare_sound = pygame.mixer.Sound("assets/jumpscare.ogg")
+
+# The jumpscare animations loaded as an image containing each frame stacked vertically
 jumpscare_sheet_right = pygame.image.load("assets/freddy_jumpsheet.jpg")
-jumpscare_sheet_right_frames = 28
 jumpscare_sheet_left = pygame.image.load("assets/bonnie_jumpsheet.jpg")
+jumpscare_sheet_right_frames = 28
 jumpscare_sheet_left_frames = 11
+
 background = pygame.image.load("assets/office.png")
 left_door_pos = pygame.Vector2(58,59)
 left_animatronic_pos = pygame.Vector2(56,89)
@@ -27,19 +31,17 @@ right_door_close = 1.0
 right_button_bounds = pygame.rect.Rect(623,163,40,110)
 
 door_close_length = 5.0
-animatronic_max_distance = 10
-animatronic_min_distance = 8
+animatronic_max_distance = 25
+animatronic_min_distance = 15
 
 default_background_rect = screen.screen_rect 
-
 # The amount of pixels on the border of the background along the y axis
 background_padding_y = int((background.get_height() - screen.screen_rect.height)/2)
-
 # The amount of pixels on the border of the background along the x axis
 background_padding_x = int((background.get_width() - screen.screen_rect.width)/2)
-
 default_background_rect.x -= background_padding_x
 default_background_rect.y -= background_padding_y
+
 
 # Amount of pixel the mouse has to move to pan the background by 1 pixel, negative values reverse direction of movement
 background_pan = -20

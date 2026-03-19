@@ -290,7 +290,11 @@ def input_number(value):
 
 def get_random_puzzle() -> str:
     lines = []
-    filename = "assets/puzzles.txt"
+
+    filename = "assets/easypuzzles.txt"
+    if globals.difficulty == "Hard":
+        filename = "assets/hardpuzzles.txt"
+
     with open(filename, "r") as file:
         lines = [line.rstrip() for line in file]
 
