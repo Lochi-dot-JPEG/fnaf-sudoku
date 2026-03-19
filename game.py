@@ -66,6 +66,12 @@ def play() -> Result:
         screen.clock.tick(60)  # limits FPS to 60
         survival_time += screen.clock.get_time()
 
+        if survival_time > globals.max_time:
+            ui.announce(["You ran out of power..."])
+            horror.jumpscare(False)
+            horror.caught = True
+            survived = False
+            playing = False
         if horror.caught != "":
             if horror.caught == "left":
                 horror.jumpscare(True)

@@ -9,6 +9,8 @@ error_tile_color = (140, 40, 57)
 selected_tile_alpha = 60
 difficulty = "Normal"
 
+max_time = 60 * 10 * 1000
+
 tile_text_color = (170, 202, 224)
 tile_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 16)
 button_font = pygame.font.Font('assets/JetBrainsMonoNL-Bold.ttf', 20)
