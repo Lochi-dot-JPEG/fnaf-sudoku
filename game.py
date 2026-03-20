@@ -1,3 +1,4 @@
+from math import floor
 import sudoku
 import pygame
 import globals
@@ -42,6 +43,19 @@ def handle_input():
             exit()
 
 
+def draw_power(survival_time: int):
+    total_seconds = (globals.max_time - survival_time) / 1000
+    seconds = floor(total_seconds % 60)
+    minutes = floor(total_seconds / 60)
+
+    power_label = globals.time_font.render(
+        str(minutes) + " mins " + str(seconds) + " seconds power remain",
+        1,
+        globals.defaultFontColor,
+    )
+    screen.screen.blit(power_label, (8, 6))
+
+
 def play() -> Result:
     # Survival time stored in milliseconds
     survival_time: int = 0
@@ -61,6 +75,7 @@ def play() -> Result:
         horror.update(1.0 / 60.0)
         horror.draw_game_background()
         horror.draw_animatronics()
+        draw_power(survival_time)
         sudoku.draw_board(screen.screen)
         pygame.display.flip()  # update the display
         screen.clock.tick(60)  # limits FPS to 60

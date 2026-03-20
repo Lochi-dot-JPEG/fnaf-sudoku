@@ -17,6 +17,7 @@ max_time = 60 * 10 * 1000
 tile_text_color = (170, 202, 224)
 tile_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 16)
 button_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 20)
+time_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 12)
 title_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 32)
 
 returning_to_title: bool = False

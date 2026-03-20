@@ -1,6 +1,7 @@
 import screen
 import pygame
 import random
+import globals
 
 from ui import draw_title_background
 
@@ -31,8 +32,8 @@ right_door_close = 1.0
 right_button_bounds = pygame.rect.Rect(623, 163, 40, 110)
 
 door_close_length = 5.0
-animatronic_max_distance = 25
-animatronic_min_distance = 15
+animatronic_max_distance = 60
+animatronic_min_distance = 30
 
 default_background_rect = screen.screen_rect
 # The amount of pixels on the border of the background along the y axis
