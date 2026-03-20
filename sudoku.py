@@ -88,6 +88,12 @@ def update_board_texture():
     # Check if the grid is completed
     global completed
     completed = True
+    if (
+        failed_squares.__len__() > 0
+        or failed_columns.__len__() > 0
+        or failed_rows.__len__() > 0
+    ):
+        completed = False
     for x in range(9):
         for y in range(9):
             if board_state[x][y] == 0:
