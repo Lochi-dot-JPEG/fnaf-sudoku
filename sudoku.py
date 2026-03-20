@@ -258,9 +258,8 @@ def check_rows() -> list[int]:
         for x in range(9):
             row_values.append(board_state[x][y])
 
-        if not (0 in row_values):
-            if not check_all_unique(row_values):
-                fails.append(y)
+        if not check_all_unique(row_values):
+            fails.append(y)
     return fails
 
 
@@ -268,9 +267,8 @@ def check_columns() -> list[int]:
     fails = []
     for x in range(9):
         column_values = board_state[x]
-        if not (0 in column_values):
-            if not check_all_unique(column_values):
-                fails.append(x)
+        if not check_all_unique(column_values):
+            fails.append(x)
     return fails
 
 
@@ -286,15 +284,14 @@ def check_squares() -> list[pygame.Vector2]:
                         board_state[square_x * 3 + x][square_y * 3 + y]
                     )
 
-            if not (0 in square_values):
-                if not check_all_unique(square_values):
-                    fails.append(pygame.Vector2(square_x, square_y))
+            if not check_all_unique(square_values):
+                fails.append(pygame.Vector2(square_x, square_y))
     return fails
 
 
 def check_all_unique(numbers: list[int]) -> bool:
     for i in range(1, 10):
-        if numbers.count(i) != 1:
+        if numbers.count(i) > 1:
             return False
     return True
 

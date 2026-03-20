@@ -9,20 +9,22 @@ title_text_lines = ["Five", "Nights", "at Freddy’s:", "Sudoku"]
 
 shah_logo = pygame.image.load("assets/logosmall.png")
 
-def draw_title_background():
-    screen.screen.blit(title_background, (0,0))
 
-def ask(question: str, inputs: list[str], title_decoration = False) -> str:
-    ask_buttons : list[button.Button] = []
+def draw_title_background():
+    screen.screen.blit(title_background, (0, 0))
+
+
+def ask(question: str, inputs: list[str], title_decoration=False) -> str:
+    ask_buttons: list[button.Button] = []
     start_y = 165
     gap = 40
-    ask_pos = pygame.Vector2(16,16)
+    ask_pos = pygame.Vector2(16, 16)
     x_position = 16
     ask_text = globals.button_font.render(question, True, globals.defaultFontColor)
 
     for i in range(inputs.__len__()):
         button_position = pygame.Vector2(x_position, start_y + gap * i)
-        label = inputs[i] 
+        label = inputs[i]
         new_button = button.Button(button_position, label)
         ask_buttons.append(new_button)
 
@@ -37,8 +39,8 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
         # Handle closing the window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return("_quit")
+                pygame.quit()
+                return "_quit"
 
         for b in ask_buttons:
             b.update_hover()
@@ -56,8 +58,10 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
         if title_decoration:
             i = 0
             for line in title_text_lines:
-                rendered_font = globals.title_font.render(line, True, globals.defaultFontColor)
-                screen.screen.blit(rendered_font, (x_position,40 * i))
+                rendered_font = globals.title_font.render(
+                    line, True, globals.defaultFontColor
+                )
+                screen.screen.blit(rendered_font, (x_position, 40 * i))
                 i += 1
             screen.screen.blit(shah_logo, (16, 280))
         pygame.display.flip()
@@ -65,31 +69,37 @@ def ask(question: str, inputs: list[str], title_decoration = False) -> str:
 
     return result
 
-def announce(text : list[str]):
+
+def announce(text: list[str]):
     # Milliseconds announcing the text for
-    announcing = 4000
+    announcing = 3500
 
     line_count = text.__len__()
     rendered_texts = []
     rendered_positions = []
     for i in range(line_count):
-
-        rendered_text = globals.button_font.render(text[i], True, globals.defaultFontColor)
-        rendered_text_position = pygame.Vector2(0,0)
-        rendered_text_position.x = (screen.screen.get_width() - rendered_text.get_width()) / 2
-        rendered_text_position.y = (screen.screen.get_height() - rendered_text.get_height()) / 2 + rendered_text.get_height() * i
+        rendered_text = globals.button_font.render(
+            text[i], True, globals.defaultFontColor
+        )
+        rendered_text_position = pygame.Vector2(0, 0)
+        rendered_text_position.x = (
+            screen.screen.get_width() - rendered_text.get_width()
+        ) / 2
+        rendered_text_position.y = (
+            screen.screen.get_height() - rendered_text.get_height()
+        ) / 2 + rendered_text.get_height() * i
 
         rendered_texts.append(rendered_text)
         rendered_positions.append(rendered_text_position)
 
     while announcing > 0:
-        screen.screen.fill((0,0,0))
+        screen.screen.fill((0, 0, 0))
 
         # Handle closing the window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return("_quit")
+                pygame.quit()
+                return "_quit"
 
         # Draw the question
         for line in range(line_count):
@@ -98,4 +108,3 @@ def announce(text : list[str]):
         pygame.display.flip()
         screen.clock.tick(60)
         announcing -= screen.clock.get_time()
-
