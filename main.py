@@ -1,13 +1,11 @@
 import pygame
-# Initialise pygame before importing other modules so fonts can load
-pygame.init()
-# Initialise pygame's sound mixer to enable audio
-pygame.mixer.init()
-# Import necessary modules
 import player_management
 import ui
 import globals
 
+# Initialise pygame's sound mixer to enable audio
+pygame.mixer.init()
+# Import necessary modules
 
 title_options = ["Play Game", "Tutorial", "Quit"]
 
@@ -17,7 +15,6 @@ pygame.mixer.music.play(-1)
 
 running = True
 while running:
-
     globals.returning_to_title = False
 
     # Display title screen with title decorations enabled

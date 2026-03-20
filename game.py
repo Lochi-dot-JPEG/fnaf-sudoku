@@ -1,28 +1,28 @@
 import sudoku
 import pygame
-import button
 import globals
 import horror
 import screen
 import ui
 
+
+# Class storing the result of the round of a game
 class Result:
-    survived = True
+    # Whether the player survived the game
+    survived: bool = True
     # Amount of time the game ran
     # For survivors this is how long it took to complete the puzzle
     # For deaths it is how long they survived
-    time = 0.0
+    time: int = 0
 
-# Returns whether to keep the game running
+
+# Exits the game to the title screen if accept your fate is pressed, otherwise unpause
 def pause_game():
-    match ui.ask("Game Paused",["Continue", "Accept your fate..."]):
+    match ui.ask("Game Paused", ["Continue", "Accept your fate..."]):
         case "Accept your fate...":
             globals.returning_to_title = True
-        case "Continue":
-            pass
         case _:
             pass
-            
 
 
 def handle_input():
@@ -44,7 +44,7 @@ def handle_input():
 
 def play() -> Result:
     # Survival time stored in milliseconds
-    survival_time = 0
+    survival_time: int = 0
     # Whether the player was caught throughout the game
     survived = False
     # Whether the game should loop for another frame
@@ -57,19 +57,18 @@ def play() -> Result:
         if globals.returning_to_title:
             playing = False
             continue
-        
-        horror.update(1.0/60.0)
+
+        horror.update(1.0 / 60.0)
         horror.draw_game_background()
         horror.draw_animatronics()
         sudoku.draw_board(screen.screen)
-        pygame.display.flip() # update the display
+        pygame.display.flip()  # update the display
         screen.clock.tick(60)  # limits FPS to 60
         survival_time += screen.clock.get_time()
 
         if survival_time > globals.max_time:
             ui.announce(["You ran out of power..."])
             horror.jumpscare(False)
-            horror.caught = True
             survived = False
             playing = False
         if horror.caught != "":
@@ -85,13 +84,8 @@ def play() -> Result:
             playing = False
             ui.announce(["You Survived the Night"])
 
-
-
     # Pass game result to the return of the function
     result = Result()
     result.survived = survived
     result.time = survival_time
     return result
-
-
-
