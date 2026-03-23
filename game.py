@@ -49,7 +49,7 @@ def draw_power(survival_time: int):
     minutes = floor(total_seconds / 60)
 
     power_label = globals.time_font.render(
-        str(minutes) + " mins " + str(seconds) + " seconds power remain",
+        str(minutes) + " mins " + str(seconds) + " seconds of power remaining",
         1,
         globals.defaultFontColor,
     )
@@ -81,11 +81,14 @@ def play() -> Result:
         screen.clock.tick(60)  # limits FPS to 60
         survival_time += screen.clock.get_time()
 
+        # Runs out of time
         if survival_time > globals.max_time:
             ui.announce(["You ran out of power..."])
             horror.jumpscare(False)
             survived = False
             playing = False
+
+        # Checks if the horror module declares the player as caught
         if horror.caught != "":
             if horror.caught == "left":
                 horror.jumpscare(True)
@@ -94,6 +97,8 @@ def play() -> Result:
             survived = False
             playing = False
             ui.announce(["You got caught..."])
+
+        # Checks if the puzzle has been solved
         if sudoku.completed:
             survived = True
             playing = False

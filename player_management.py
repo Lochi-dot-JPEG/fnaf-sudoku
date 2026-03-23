@@ -13,7 +13,9 @@ def run_game():
 
     print("Player count is", player_count)
 
-    if player_count > 1:
+    if player_count == 1:
+        game.play()
+    else:
         results: list[game.Result] = []
         for i in range(player_count):
             ui.announce(["Player " + str(i + 1), "Start!"])
@@ -21,8 +23,6 @@ def run_game():
             if globals.returning_to_title:
                 return
         announce_best_result(results)
-    else:
-        game.play()
 
 
 def announce_best_result(results: list[game.Result]):

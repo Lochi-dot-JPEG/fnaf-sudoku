@@ -14,7 +14,6 @@ pygame.mixer.music.load("assets/music_box.ogg")
 pygame.mixer.music.play(-1)
 
 running = True
-ui.announce(["This game is best experienced with volume on."])
 while running:
     globals.returning_to_title = False
 
@@ -26,7 +25,7 @@ while running:
         case "Play Game":
             player_management.run_game()
         case "Tutorial":
-            pass
+            ui.tutorial()
         case _:
             pygame.quit()
             running = False

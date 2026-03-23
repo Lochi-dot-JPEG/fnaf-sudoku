@@ -31,7 +31,7 @@ right_door_close = 1.0
 
 right_button_bounds = pygame.rect.Rect(623, 163, 40, 110)
 
-door_close_length = 5.0
+door_close_length: float = 5.0
 animatronic_max_distance = 60
 animatronic_min_distance = 30
 
@@ -47,8 +47,8 @@ default_background_rect.y -= background_padding_y
 # Amount of pixel the mouse has to move to pan the background by 1 pixel, negative values reverse direction of movement
 background_pan = -20
 
-left_animatronic_distance = 15
-right_animatronic_distance = 5
+left_animatronic_distance: float = 15.0
+right_animatronic_distance: float = 5.0
 
 # Amount of seconds given to notice the animatronic before you lose
 animatronic_warning_time = 15
