@@ -23,9 +23,9 @@ Shah Industries grants you a limited, non-exclusive, non-transferable, revocable
 3. Restrictions  
 You agree that you will not:
 
-Copy, reproduce, distribute, or share the Game or its files
-Use the Game for any commercial purpose
-Modify, reverse engineer, or exploit the Game in any way not expressly permitted
+- Copy, reproduce, distribute, or share the Game or its files
+- Use the Game for any commercial purpose
+- Modify, reverse engineer, or exploit the Game in any way not expressly permitted
 
 
 
