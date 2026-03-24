@@ -29,9 +29,23 @@ def announce_best_result(results: list[game.Result]):
     survivors = [i for i, r in enumerate(results) if r.survived]
     if survivors:
         # Find the survivor with the shortest time
-        best_idx = min(survivors, key=lambda i: results[i].time)
+        best_idx = 0 
+        lowest_time = globals.max_time + 1
+        for survivor in survivors:
+            time =  results[survivor].time
+            if time < lowest_time:
+                highest_time = time
+                best_idx = survivor
+            
         ui.announce(["Player " + str(best_idx + 1), "solved the game fastest!"])
     else:
         # Find the player with the longest survival time
-        best_idx = max(range(len(results)), key=lambda i: results[i].time)
+        best_idx = 0 
+        highest_time = -1
+        for survivor in survivors:
+            time =  results[survivor].time
+            if time > highest_time:
+                highest_time = time
+                best_idx = survivor
+
         ui.announce(["Player " + str(best_idx + 1), "survived the longest!"])
