@@ -21,7 +21,8 @@ skipped_player = False
 # Exits the game to the title screen if accept your fate is pressed, otherwise unpause
 def pause_game():
     options = ["Continue", "Accept your fate..."]
-    multiplayer = True # TODO
+    
+    multiplayer = globals.player_count > 1
     if multiplayer:
         options.append("Cut the power (skip player)")
     match ui.ask("Game Paused", options):
@@ -90,16 +91,6 @@ def play() -> Result:
             playing = False
             continue
 
-        horror.update(1.0 / 60.0)
-        horror.draw_game_background()
-        horror.draw_animatronics()
-        draw_power(survival_time)
-        sudoku.draw_board(screen.screen)
-        pygame.display.flip()  # update the display
-        screen.clock.tick(60)  # limits FPS to 60
-        survival_time += screen.clock.get_time()
-
-
         # Checks if the horror module declares the player as caught
         if horror.caught != "":
             if horror.caught == "left":
@@ -109,12 +100,38 @@ def play() -> Result:
             survived = False
             playing = False
             ui.announce(["You got caught..."])
+            continue
 
         # Checks if the puzzle has been solved
         if sudoku.completed:
             survived = True
             playing = False
             ui.announce(["You Survived the Night"])
+            continue
+
+        
+        horror.update(1.0 / 60.0)
+
+        # Draw frame
+        horror.draw_game_background()
+        horror.draw_animatronics()
+        sudoku.draw_board(screen.screen)
+        if globals.difficulty == "Nightmare":
+            horror.draw_flashlight()
+        draw_power(survival_time)
+
+        # Draw shadow for nightmare mode
+
+
+
+
+        pygame.display.flip()  # update the display
+        screen.clock.tick(60)  # limits FPS to 60
+
+        # Incremement survival time
+        survival_time += screen.clock.get_time()
+
+
 
     # Pass game result to the return of the function
     result = Result()

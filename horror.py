@@ -1,3 +1,4 @@
+from warnings import warn
 import screen
 import pygame
 import random
@@ -7,6 +8,9 @@ from ui import draw_title_background
 
 # Jumpscare sound loaded from ogg file
 jumpscare_sound = pygame.mixer.Sound("assets/jumpscare.ogg")
+
+# Load flashlight image
+flashlight_image = pygame.image.load("assets/nightmarelight.png")
 
 # The jumpscare animations loaded as an image containing each frame stacked vertically
 jumpscare_sheet_right = pygame.image.load("assets/freddy_jumpsheet.jpg")
@@ -33,7 +37,7 @@ right_button_bounds = pygame.rect.Rect(623, 163, 40, 110)
 
 door_close_length: float = 5.0
 animatronic_max_distance = 60
-animatronic_min_distance = 30
+animatronic_min_distance = 40
 
 default_background_rect = screen.screen_rect
 # The amount of pixels on the border of the background along the y axis
@@ -47,11 +51,14 @@ default_background_rect.y -= background_padding_y
 # Amount of pixel the mouse has to move to pan the background by 1 pixel, negative values reverse direction of movement
 background_pan = -20
 
-left_animatronic_distance: float = 15.0
-right_animatronic_distance: float = 5.0
+left_animatronic_distance: float = 1.0
+right_animatronic_distance: float = 1.0
 
 # Amount of seconds given to notice the animatronic before you lose
 animatronic_warning_time = 15
+
+# Fade in slower for nightmare mode to make it more fair
+nightmare_warning_time = 30
 
 background_draw_offset = pygame.Vector2(0, 0)
 
@@ -148,10 +155,13 @@ def click():
 
 
 def draw_animatronics():
+    warning_time = animatronic_warning_time
+    if globals.difficulty == "Nightmare":
+        warning_time = nightmare_warning_time
     if left_door_close > 0:
         screen.screen.blit(left_door_image, left_door_pos + background_draw_offset)
-    elif left_animatronic_distance < animatronic_warning_time:
-        alpha = 255 - int((left_animatronic_distance / animatronic_warning_time) * 255)
+    elif left_animatronic_distance < warning_time:
+        alpha = 255 - int((left_animatronic_distance / warning_time) * 255)
         left_animatronic_image.set_alpha(alpha)
         screen.screen.blit(
             left_animatronic_image, left_animatronic_pos + background_draw_offset
@@ -159,12 +169,18 @@ def draw_animatronics():
 
     if right_door_close > 0:
         screen.screen.blit(right_door_image, right_door_pos + background_draw_offset)
-    elif right_animatronic_distance < animatronic_warning_time:
-        alpha = 255 - int((right_animatronic_distance / animatronic_warning_time) * 255)
+    elif right_animatronic_distance < warning_time:
+        alpha = 255 - int((right_animatronic_distance / warning_time) * 255)
         right_animatronic_image.set_alpha(alpha)
         screen.screen.blit(
             right_animatronic_image, right_animatronic_pos + background_draw_offset
         )
+
+def draw_flashlight():
+    mouse_position = pygame.mouse.get_pos()
+    draw_position = (mouse_position[0] - screen.window_size[0], mouse_position[1]- screen.window_size[1])
+
+    screen.screen.blit(flashlight_image, draw_position)
 
 
 def jumpscare(left=False):

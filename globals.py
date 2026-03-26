@@ -12,6 +12,8 @@ error_tile_color = (140, 40, 57)
 selected_tile_alpha = 60
 difficulty: str = "Normal"
 
+player_count = 1
+
 max_time = 60 * 15 * 1000
 
 tile_text_color = (170, 202, 224)

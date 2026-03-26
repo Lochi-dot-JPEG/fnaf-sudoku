@@ -312,7 +312,7 @@ def get_random_puzzle() -> str:
     lines = []
 
     filename = "assets/easypuzzles.txt"
-    if globals.difficulty == "Hard":
+    if globals.difficulty == "Hard" or globals.difficulty == "Nightmare":
         filename = "assets/hardpuzzles.txt"
 
     with open(filename, "r") as file:

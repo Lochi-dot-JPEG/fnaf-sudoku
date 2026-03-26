@@ -6,12 +6,12 @@ import globals
 def run_game():
     player_count = 0
     player_count = ui.ask("How many players are there?", ["1", "2", "3", "4"])
-    globals.difficulty = ui.ask("How difficult are the puzzles?", ["Normal", "Hard"])
+    globals.difficulty = ui.ask("How difficult are the puzzles?", ["Normal", "Hard", "Nightmare"])
     if player_count == "_quit":
         exit()
     player_count = int(player_count)
 
-    print("Player count is", player_count)
+    globals.player_count = player_count
 
     if player_count == 1:
         game.play()
