@@ -16,12 +16,20 @@ class Result:
     # For deaths it is how long they survived
     time: int = 0
 
+skipped_player = False
 
 # Exits the game to the title screen if accept your fate is pressed, otherwise unpause
 def pause_game():
-    match ui.ask("Game Paused", ["Continue", "Accept your fate..."]):
+    options = ["Continue", "Accept your fate..."]
+    multiplayer = True # TODO
+    if multiplayer:
+        options.append("Cut the power (skip player)")
+    match ui.ask("Game Paused", options):
         case "Accept your fate...":
             globals.returning_to_title = True
+        case "Cut the power (skip player)":
+            global skipped_player
+            skipped_player = True
         case _:
             pass
 
@@ -72,6 +80,16 @@ def play() -> Result:
             playing = False
             continue
 
+        # Runs out of time
+        global skipped_player
+        if skipped_player or survival_time > globals.max_time:
+            skipped_player = False
+            ui.announce(["You ran out of power..."])
+            horror.jumpscare(False)
+            survived = False
+            playing = False
+            continue
+
         horror.update(1.0 / 60.0)
         horror.draw_game_background()
         horror.draw_animatronics()
@@ -81,12 +99,6 @@ def play() -> Result:
         screen.clock.tick(60)  # limits FPS to 60
         survival_time += screen.clock.get_time()
 
-        # Runs out of time
-        if survival_time > globals.max_time:
-            ui.announce(["You ran out of power..."])
-            horror.jumpscare(False)
-            survived = False
-            playing = False
 
         # Checks if the horror module declares the player as caught
         if horror.caught != "":
