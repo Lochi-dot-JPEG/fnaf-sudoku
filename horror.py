@@ -8,6 +8,8 @@ from ui import draw_title_background
 
 # Jumpscare sound loaded from ogg file
 jumpscare_sound = pygame.mixer.Sound("assets/jumpscare.ogg")
+# Door sound loaded from ogg file
+door_sound = pygame.mixer.Sound("assets/door.ogg")
 
 # Load flashlight image
 flashlight_image = pygame.image.load("assets/nightmarelight.png")
@@ -15,8 +17,10 @@ flashlight_image = pygame.image.load("assets/nightmarelight.png")
 # The jumpscare animations loaded as an image containing each frame stacked vertically
 jumpscare_sheet_right = pygame.image.load("assets/freddy_jumpsheet.jpg")
 jumpscare_sheet_left = pygame.image.load("assets/bonnie_jumpsheet.jpg")
+jumpscare_sheet_power = pygame.image.load("assets/no_power_jumpsheet.jpg")
 jumpscare_sheet_right_frames = 28
 jumpscare_sheet_left_frames = 11
+jumpscare_sheet_power_frames = 21
 
 background = pygame.image.load("assets/office.png")
 left_door_pos = pygame.Vector2(58, 59)
@@ -129,6 +133,7 @@ def update(delta: float):
 
 
 def close_door_left():
+    door_sound.play()
     global left_door_close
     global left_animatronic_distance
     left_door_close = door_close_length
@@ -138,6 +143,7 @@ def close_door_left():
 
 
 def close_door_right():
+    door_sound.play()
     global right_door_close
     global right_animatronic_distance
     right_door_close = door_close_length
@@ -176,20 +182,30 @@ def draw_animatronics():
             right_animatronic_image, right_animatronic_pos + background_draw_offset
         )
 
+
+# Draws the black around the flashlight for nightmare mode
 def draw_flashlight():
     mouse_position = pygame.mouse.get_pos()
-    draw_position = (mouse_position[0] - screen.window_size[0], mouse_position[1]- screen.window_size[1])
+    draw_position = (
+        mouse_position[0] - screen.window_size[0],
+        mouse_position[1] - screen.window_size[1],
+    )
 
     screen.screen.blit(flashlight_image, draw_position)
 
 
-def jumpscare(left=False):
+def jumpscare(left=False, power=True):
+    pygame.mixer_music.stop()
     jumpscare_sound.play()
     frame_count = jumpscare_sheet_right_frames
     if left:
         frame_count = jumpscare_sheet_left_frames
+    if not power:
+        frame_count = jumpscare_sheet_power_frames
     for i in range(frame_count):
-        if left:
+        if not power:
+            screen.screen.blit(jumpscare_sheet_power, (0, i * -360))
+        elif left:
             screen.screen.blit(jumpscare_sheet_left, (0, i * -360))
         else:
             screen.screen.blit(jumpscare_sheet_right, (0, i * -360))
