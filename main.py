@@ -10,11 +10,11 @@ pygame.mixer.init()
 title_options = ["Play Game", "Tutorial", "Quit"]
 
 # Play and loop music infinitely
-pygame.mixer.music.load("assets/music_box.ogg")
-pygame.mixer.music.play(-1)
 
 running = True
 while running:
+    pygame.mixer.music.load(globals.musicbox_music_path)
+    pygame.mixer.music.play()
     globals.returning_to_title = False
 
     # Display title screen with title decorations enabled

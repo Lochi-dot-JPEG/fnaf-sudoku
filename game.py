@@ -16,12 +16,14 @@ class Result:
     # For deaths it is how long they survived
     time: int = 0
 
+
 skipped_player = False
+
 
 # Exits the game to the title screen if accept your fate is pressed, otherwise unpause
 def pause_game():
     options = ["Continue", "Accept your fate..."]
-    
+
     multiplayer = globals.player_count > 1
     if multiplayer:
         options.append("Cut the power (skip player)")
@@ -52,7 +54,7 @@ def handle_input():
             exit()
 
 
-def draw_power(survival_time: int):
+def draw_power_display(survival_time: int):
     total_seconds = (globals.max_time - survival_time) / 1000
     seconds = floor(total_seconds % 60)
     minutes = floor(total_seconds / 60)
@@ -66,6 +68,9 @@ def draw_power(survival_time: int):
 
 
 def play() -> Result:
+
+    pygame.mixer_music.load(globals.ambient_music_path)
+    pygame.mixer_music.play(-1)
     # Survival time stored in milliseconds
     survival_time: int = 0
     # Whether the player was caught throughout the game
@@ -75,8 +80,11 @@ def play() -> Result:
 
     sudoku.initialise_board()
     horror.new_game()
+
     while playing:
         handle_input()
+
+        # Ends the round if returned to title from the pause menu
         if globals.returning_to_title:
             playing = False
             continue
@@ -86,7 +94,7 @@ def play() -> Result:
         if skipped_player or survival_time > globals.max_time:
             skipped_player = False
             ui.announce(["You ran out of power..."])
-            horror.jumpscare(False)
+            horror.jumpscare(False, False)
             survived = False
             playing = False
             continue
@@ -109,7 +117,6 @@ def play() -> Result:
             ui.announce(["You Survived the Night"])
             continue
 
-        
         horror.update(1.0 / 60.0)
 
         # Draw frame
@@ -118,20 +125,15 @@ def play() -> Result:
         sudoku.draw_board(screen.screen)
         if globals.difficulty == "Nightmare":
             horror.draw_flashlight()
-        draw_power(survival_time)
+        draw_power_display(survival_time)
 
         # Draw shadow for nightmare mode
-
-
-
 
         pygame.display.flip()  # update the display
         screen.clock.tick(60)  # limits FPS to 60
 
         # Incremement survival time
         survival_time += screen.clock.get_time()
-
-
 
     # Pass game result to the return of the function
     result = Result()

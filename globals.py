@@ -12,9 +12,9 @@ error_tile_color = (140, 40, 57)
 selected_tile_alpha = 60
 difficulty: str = "Normal"
 
-player_count = 1
+player_count: int = 1
 
-max_time = 60 * 15 * 1000
+max_time = 60 * 10 * 1000
 
 tile_text_color = (170, 202, 224)
 tile_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 16)
@@ -24,3 +24,6 @@ tutorial_font = time_font
 title_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 32)
 
 returning_to_title: bool = False
+
+ambient_music_path = str("assets/loopingambience.ogg")
+musicbox_music_path = str("assets/music_box.ogg")

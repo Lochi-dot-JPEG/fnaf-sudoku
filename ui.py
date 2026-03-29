@@ -10,57 +10,61 @@ title_text_lines = ["Five", "Nights", "at Freddy’s:", "Sudoku"]
 shah_logo = pygame.image.load("assets/logosmall.png")
 
 tutorial_texts = [
-        [ 
-
-         "Low on money, you took this part time job working",
-         "at Five Night\'s at Freddy\'s Pizzeria.",
-         "That was until the lights outside your office went", 
-         "out, and a musicbox begun to chime.",
-         "The exit locked, and a your computer lit up with a", 
-         "sudoku puzzle. ",
-         "You must solve the sudoku puzzle quickly, to make",
-         "your exit before your power runs out, while also ",
-         "making sure, the animatronics do not catch you.",
+    [
+        "Low on money, you took this part time job working",
+        "at Five Night's at Freddy's Pizzeria.",
+        "That was until the lights outside your office went",
+        "out, and a musicbox begun to chime.",
+        "The exit locked, and a your computer lit up with a",
+        "sudoku puzzle. ",
+        "You must solve the sudoku puzzle quickly, to make",
+        "your exit before your power runs out, while ",
+        "making sure the animatronics do not catch you.",
         "",
-         "This game is best experienced with volume on."
-        ],
-        [
-        "Use arrow keys, WASD or mouse cursor to move between", 
+        "This game is best experienced with volume on.",
+    ],
+    [
+        "Use arrow keys, WASD or mouse cursor to move between",
         "tiles in the sudoku grid.",
         "",
         "Press an number key to place it in that slot.",
         "Press backspace to remove numbers.",
         "",
-        "Squares highlighted in white are part of the puzzle", 
+        "Squares highlighted in white are part of the puzzle",
         "and cannot be changed",
         "",
-        "If a row, column or 3x3 square is highlighted red,", 
+        "If a row, column or 3x3 square is highlighted red,",
         "there is an error in your solution. ",
-        ],
-        [
+    ],
+    [
         "To close the doors and stop animatronics, use the",
-        "mouse to press the red buttons you.", 
+        "mouse to press the red buttons you.",
         "",
-        "If you leave them too long, you will get caught.", 
-        ],
-        [
+        "If you leave them too long, you will get caught.",
+    ],
+    [
+        "Each difficulty slightly changes how the game plays.",
+        "",
+        "Normal difficulty gives you simple puzzles.",
+        "",
+        "Hard difficulty gives you much harder puzzles.",
+        "",
+        "Nightmare difficulty restricts your vision",
+        "and also gives you the same puzzles as hard mode.",
+    ],
+    [
         "In multiplayer mode, 2, 3 or 4 players participate.",
-        "Each player gets a full round of trying to survive", 
+        "Each player gets a full round of trying to survive",
         "the game.",
         "",
-        "If nobody survives then the player that lasted the", 
+        "If nobody survives then the player that lasted the",
         "longest will be declared the winner.",
         "If one person solves the puzzle then they will win",
         "",
-        "If multiple players complete the puzzle then", "whoever did it in the least amount of time will win.",
-        ]
+        "If multiple players complete the puzzle then",
+        "whoever did it in the least amount of time will win.",
+    ],
 ]
-
-
-#""
-
-
-
 
 
 def draw_title_background():
@@ -93,7 +97,7 @@ def ask(question: str, inputs: list[str], title_decoration=False) -> str:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return "_quit"
+                exit()
 
         for b in ask_buttons:
             b.update_hover()
@@ -123,7 +127,7 @@ def ask(question: str, inputs: list[str], title_decoration=False) -> str:
     return result
 
 
-def announce(text: list[str], tutorial = False):
+def announce(text: list[str], tutorial=False):
     # Milliseconds announcing the text for
     announcing = 3500
 
@@ -180,9 +184,13 @@ def tutorial():
     page_count = tutorial_texts.__len__()
     while page < page_count:
         page_text = [
-                "<- Left arrow           " + str(page + 1) + "/" + str(page_count) + "           Right Arrow ->",
-                ""
-                ]
+            "<- Left arrow           "
+            + str(page + 1)
+            + "/"
+            + str(page_count)
+            + "           Right Arrow ->",
+            "",
+        ]
 
         page_text.extend(tutorial_texts[page])
 
@@ -193,7 +201,3 @@ def tutorial():
             page += 1
         if page < 0:
             page = 0
-
-
-
-
