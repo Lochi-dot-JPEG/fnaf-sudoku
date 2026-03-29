@@ -20,7 +20,7 @@ monitor.set_colorkey((0, 255, 0))
 locked_squares: list[tuple[int, int]] = []
 completed = False
 
-tile_font_draw_offset = (5, 0)
+tile_font_draw_offset = (5, -1)
 
 failed_rows: list[int] = []
 failed_columns: list[int] = []
@@ -42,7 +42,7 @@ board_texture_size = (board_length, board_length)
 # A pygame surface to store the texture of the rendered sudoku board
 board_texture = pygame.Surface(board_texture_size)
 tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
-selected_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
+selected_tile_texture = pygame.Surface((grid_tile_size - 4, grid_tile_size - 4))
 error_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 locked_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 
@@ -166,7 +166,9 @@ def draw_3x_grid(x, y):
                 total_x_position == selected_tile_x
                 and total_y_position == selected_tile_y
             ):
-                board_texture.blit(selected_tile_texture, draw_location)
+                board_texture.blit(
+                    selected_tile_texture, (draw_location[0] + 2, draw_location[1] + 2)
+                )
 
             tile_text = board_state[total_x_position][total_y_position]
             if tile_text != 0:
