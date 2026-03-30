@@ -46,6 +46,8 @@ selected_tile_texture = pygame.Surface((grid_tile_size - 4, grid_tile_size - 4))
 error_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 locked_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 
+rendered_numbers = []
+
 tile_texture.fill(globals.default_tile_colour)
 selected_tile_texture.fill(globals.selected_tile_colour)
 selected_tile_texture.set_alpha(globals.selected_tile_alpha)
@@ -60,9 +62,21 @@ selected_tile_y = 4
 
 
 def initialise_board():
+    # Optimisation to store the text surfaces so they do not need to be re-rendered every frame
+    global rendered_numbers 
+    rendered_numbers = []
+    for i in range(1,10):
+        rendered_number_surface = globals.tile_font.render(
+            str(i), True, globals.tile_text_color
+        )
+        rendered_numbers.append(rendered_number_surface)
+
     new_state = get_random_puzzle()
+
     global completed
     completed = False
+
+    # Set the locked squares array to include the coordinates of each non-zero number in the puzzle
     global locked_squares
     locked_squares = []
     index = 0
@@ -74,6 +88,7 @@ def initialise_board():
                 locked_squares.append((x, y))
             index += 1
 
+    # Update the board after setting it
     board_changed()
 
 
@@ -177,11 +192,7 @@ def draw_3x_grid(x, y):
                 text_location_x += tile_font_draw_offset[0]
                 text_location_y += tile_font_draw_offset[1]
 
-                # This could be optimised to store the text surfaces so they do not need to be re-rendered every frame
-                rendered_text = globals.tile_font.render(
-                    str(tile_text), True, globals.tile_text_color
-                )
-                board_texture.blit(rendered_text, (text_location_x, text_location_y))
+                board_texture.blit(rendered_numbers[tile_text - 1], (text_location_x, text_location_y))
 
 
 def up_pressed():
@@ -249,6 +260,7 @@ def key_pressed(event):
         input_number(0)
 
 
+# Check for errors, then update the texture of the board each time a value in the board is changed
 def board_changed():
     global failed_rows
     global failed_columns
@@ -261,11 +273,14 @@ def board_changed():
 
 def check_rows() -> list[int]:
     fails = []
+    # Loop through each row
     for y in range(9):
+        # Store each number in the row in a new list
         row_values = []
         for x in range(9):
             row_values.append(board_state[x][y])
 
+        # If there is duplicate numbers, add the row number to the returned value
         if not check_all_unique(row_values):
             fails.append(y)
     return fails
@@ -273,8 +288,12 @@ def check_rows() -> list[int]:
 
 def check_columns() -> list[int]:
     fails = []
+    # Loop through each column
     for x in range(9):
+        # Store each number in the row
         column_values = board_state[x]
+
+        # If there is duplicate numbers, add the column number to the returned value
         if not check_all_unique(column_values):
             fails.append(x)
     return fails
@@ -283,8 +302,11 @@ def check_columns() -> list[int]:
 def check_squares() -> list[pygame.Vector2]:
     fails: list[pygame.Vector2] = []
 
+    # Loop square_x from 0-2
     for square_x in range(3):
+        # Loop square_y from 0-2
         for square_y in range(3):
+            # Get each value in the square
             square_values = []
             for x in range(3):
                 for y in range(3):
@@ -293,17 +315,20 @@ def check_squares() -> list[pygame.Vector2]:
                     )
 
             if not check_all_unique(square_values):
+                # If there is duplicate numbers, add the square coordinate to the returned value
                 fails.append(pygame.Vector2(square_x, square_y))
     return fails
 
 
 def check_all_unique(numbers: list[int]) -> bool:
+    # if there is more than one occurance of any number 1-9, return False
     for i in range(1, 10):
         if numbers.count(i) > 1:
             return False
     return True
 
 
+# Set the number on the selected tile to the pressed number if the tile is not locked
 def input_number(value):
     if not ((selected_tile_x, selected_tile_y) in locked_squares):
         board_state[selected_tile_x][selected_tile_y] = value
@@ -313,11 +338,14 @@ def input_number(value):
 def get_random_puzzle() -> str:
     lines = []
 
+    # Choose which set of puzzles to load
     filename = "assets/easypuzzles.txt"
     if globals.difficulty == "Hard" or globals.difficulty == "Nightmare":
         filename = "assets/hardpuzzles.txt"
 
+    # Store each line of the file in the list
     with open(filename, "r") as file:
         lines = [line.rstrip() for line in file]
 
+    # Return a random line from the file
     return random.choice(lines)
