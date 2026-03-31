@@ -54,8 +54,8 @@ def handle_input():
             exit()
 
 
-def draw_power_display(survival_time: int):
-    total_seconds = (globals.max_time - survival_time) / 1000
+def draw_power_display():
+    total_seconds = (globals.max_time - globals.survival_time) / 1000
     seconds = floor(total_seconds % 60)
     minutes = floor(total_seconds / 60)
 
@@ -72,7 +72,7 @@ def play() -> Result:
     pygame.mixer_music.load(globals.ambient_music_path)
     pygame.mixer_music.play(-1)
     # Survival time stored in milliseconds
-    survival_time: int = 0
+    globals.survival_time = 0
     # Whether the player was caught throughout the game
     survived = False
     # Whether the game should loop for another frame
@@ -91,7 +91,7 @@ def play() -> Result:
 
         # Runs out of time
         global skipped_player
-        if skipped_player or survival_time > globals.max_time:
+        if skipped_player or globals.survival_time > globals.max_time:
             skipped_player = False
             ui.announce(["You ran out of power..."])
             horror.jumpscare(False, False)
@@ -125,7 +125,7 @@ def play() -> Result:
         sudoku.draw_board(screen.screen)
         if globals.difficulty == "Nightmare":
             horror.draw_flashlight()
-        draw_power_display(survival_time)
+        draw_power_display()
 
         # Draw shadow for nightmare mode
 
@@ -133,10 +133,10 @@ def play() -> Result:
         screen.clock.tick(60)  # limits FPS to 60
 
         # Incremement survival time
-        survival_time += screen.clock.get_time()
+        globals.survival_time += screen.clock.get_time()
 
     # Pass game result to the return of the function
     result = Result()
     result.survived = survived
-    result.time = survival_time
+    result.time = globals.survival_time
     return result

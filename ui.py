@@ -40,6 +40,9 @@ tutorial_texts = [
         "To close the doors and stop animatronics, use the",
         "mouse to press the red buttons you.",
         "",
+        "Close doors uses power. Every time you close the",
+        "door, you lose 20 seconds of power.",
+        "",
         "If you leave them too long, you will get caught.",
     ],
     [

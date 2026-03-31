@@ -59,10 +59,10 @@ left_animatronic_distance: float = 1.0
 right_animatronic_distance: float = 1.0
 
 # Amount of seconds given to notice the animatronic before you lose
-animatronic_warning_time = 15
+animatronic_warning_time = 12
 
 # Fade in slower for nightmare mode to make it more fair
-nightmare_warning_time = 30
+nightmare_warning_time = 20
 
 background_draw_offset = pygame.Vector2(0, 0)
 
@@ -133,9 +133,12 @@ def update(delta: float):
 
 
 def close_door_left():
-    door_sound.play()
     global left_door_close
     global left_animatronic_distance
+    if left_door_close > 0:
+        return
+    globals.survival_time += globals.door_time_penalty
+    door_sound.play()
     left_door_close = door_close_length
     left_animatronic_distance = random.randrange(
         animatronic_min_distance, animatronic_max_distance
@@ -143,9 +146,12 @@ def close_door_left():
 
 
 def close_door_right():
-    door_sound.play()
     global right_door_close
     global right_animatronic_distance
+    if right_door_close > 0:
+        return
+    globals.survival_time += globals.door_time_penalty
+    door_sound.play()
     right_door_close = door_close_length
     right_animatronic_distance = random.randrange(
         animatronic_min_distance, animatronic_max_distance

@@ -14,7 +14,12 @@ difficulty: str = "Normal"
 
 player_count: int = 1
 
-max_time = 60 * 10 * 1000
+# Counter for how long the round has been running
+survival_time: int = 0
+# Maximum time in milliseconds, 12 minutes
+max_time = 60 * 12 * 1000
+# Power penalty for closing doors, 20 seconds
+door_time_penalty = 20 * 1000
 
 tile_text_color = (170, 202, 224)
 tile_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 16)
