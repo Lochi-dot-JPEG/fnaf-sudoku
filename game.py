@@ -129,8 +129,8 @@ def play() -> Result:
 
         # Draw shadow for nightmare mode
 
-        pygame.display.flip()  # update the display
-        screen.clock.tick(60)  # limits FPS to 60
+        pygame.display.flip()  # Update the display
+        screen.clock.tick(60)  # Limits FPS to 60
 
         # Incremement survival time
         globals.survival_time += screen.clock.get_time()

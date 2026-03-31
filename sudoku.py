@@ -63,9 +63,9 @@ selected_tile_y = 4
 
 def initialise_board():
     # Optimisation to store the text surfaces so they do not need to be re-rendered every frame
-    global rendered_numbers 
+    global rendered_numbers
     rendered_numbers = []
-    for i in range(1,10):
+    for i in range(1, 10):
         rendered_number_surface = globals.tile_font.render(
             str(i), True, globals.tile_text_color
         )
@@ -139,65 +139,86 @@ def click_tile(screen: pygame.Surface) -> bool:
     return True
 
 
+# Returns the position that the sudoku board should be drawn at
 def get_origin_on_screen(screen: pygame.Surface) -> tuple[int, int]:
     center = (screen.get_width() / 2, screen.get_height() / 2)
     return (int(center[0] - board_length / 2), int(center[1] - board_length / 2))
 
 
+# Draws the board and monitor sprite
 def draw_board(screen: pygame.Surface):
     origin = get_origin_on_screen(screen)
     screen.blit(monitor, (origin[0] - 45, origin[1] - 50))
     screen.blit(board_texture, origin)
 
 
+# Draws a 3x3 block of numbers on the board
 def draw_3x_grid(x, y):
+    # Draws a single 3x3 block of tiles (including text and highlighting) to the board texture.
+    # Calculate the pixel origin for this specific 3x3 block on the board
     x_origin = x * large_grid_size
     y_origin = y * large_grid_size
 
     # Coordinate of the 3x3 square to be compared to any errors in failed_squares
     square = pygame.Vector2(x, y)
+
+    # Iterate through each of the 9 tiles within the 3x3 block
     for tile_x in range(3):
         for tile_y in range(3):
+            # Map the local 3x3 coordinates to global 9x9 board coordinates
             total_x_position = tile_x + x * 3
             total_y_position = tile_y + y * 3
 
+            # Compute the exact pixel location to draw this specific tile
             draw_location = (
                 x_origin + tile_x * (grid_tile_size + small_gap),
                 y_origin + tile_y * (grid_tile_size + small_gap),
             )
 
+            # Determine the visual state of the tile background
             if (total_x_position, total_y_position) in locked_squares:
+                # Tile belongs to the initial puzzle setup and cannot be changed
                 board_texture.blit(locked_tile_texture, draw_location)
             elif (
                 total_y_position in failed_rows
                 or total_x_position in failed_columns
                 or square in failed_squares
             ):
+                # Tile contains or contributes to a Sudoku rule violation
                 board_texture.blit(error_tile_texture, draw_location)
             else:
+                # Standard active tile background
                 board_texture.blit(tile_texture, draw_location)
 
+            # Draw a border or overlay if this tile is currently selected by the player
             if (
                 total_x_position == selected_tile_x
                 and total_y_position == selected_tile_y
             ):
+                # Offset by 2 pixels to properly align the selection highlight border
                 board_texture.blit(
                     selected_tile_texture, (draw_location[0] + 2, draw_location[1] + 2)
                 )
 
+            # Retrieve the number stored at this position (0 represents an empty cell)
             tile_text = board_state[total_x_position][total_y_position]
             if tile_text != 0:
+                # Apply custom font offsets to ensure the number renders directly in the center of the tile
                 text_location_x = draw_location[0]
                 text_location_y = draw_location[1]
                 text_location_x += tile_font_draw_offset[0]
                 text_location_y += tile_font_draw_offset[1]
 
-                board_texture.blit(rendered_numbers[tile_text - 1], (text_location_x, text_location_y))
+                # Render the pre-cached number surface (adjusted for 0-based index)
+                board_texture.blit(
+                    rendered_numbers[tile_text - 1], (text_location_x, text_location_y)
+                )
 
 
 def up_pressed():
     global selected_tile_y  # Allow writing to variable inside the function
     selected_tile_y -= 1
+    # Clamp the selection within the grid
     if selected_tile_y < 0:
         selected_tile_y = 0
     update_board_texture()
@@ -206,6 +227,7 @@ def up_pressed():
 def down_pressed():
     global selected_tile_y  # Allow writing to variable inside the function
     selected_tile_y += 1
+    # Clamp the selection within the grid
     if selected_tile_y > 8:
         selected_tile_y = 8
     update_board_texture()
@@ -214,6 +236,7 @@ def down_pressed():
 def left_pressed():
     global selected_tile_x  # Allow writing to variable inside the function
     selected_tile_x -= 1
+    # Clamp the selection within the grid
     if selected_tile_x < 0:
         selected_tile_x = 0
     update_board_texture()
@@ -222,6 +245,7 @@ def left_pressed():
 def right_pressed():
     global selected_tile_x  # Allow writing to variable inside the function
     selected_tile_x += 1
+    # Clamp the selection within the grid
     if selected_tile_x > 8:
         selected_tile_x = 8
     update_board_texture()

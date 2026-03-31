@@ -3,8 +3,8 @@ import globals
 
 
 # Button class that extends the pygame.sprite.Sprite class for visible game objects
-# Used for the title screen and ask menu
 
+# Height of the button
 button_height = 32
 
 
@@ -39,14 +39,19 @@ class Button:
         pygame.draw.rect(self.outline_surface, font_colour, rect, 2)
         self.outline_position = position
 
-    def update_hover(self):
+    def update_clicked(self):
+        # Don't check for clicks if the mouse is not down
+        if not pygame.mouse.get_pressed()[0]:
+            return
         mouse_position = pygame.mouse.get_pos()
+        # Check if the mouse overlaps the rect of the button
         if self.mouse_rect.collidepoint(mouse_position[0], mouse_position[1]):
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
+            self.pressed = True
 
     def draw(self, surface: pygame.Surface):
+        # Draw the button to the surface
         mouse_position = pygame.mouse.get_pos()
+        # If the mouse is over the button, draw the outline surface too
         if self.mouse_rect.collidepoint(mouse_position[0], mouse_position[1]):
             surface.blit(self.outline_surface, self.outline_position)
         surface.blit(self.text_surface, self.outline_position + self.text_offset)
