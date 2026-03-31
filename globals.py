@@ -22,8 +22,8 @@ player_count: int = 1
 # Survival & Time Mechanics
 # Tracks the total time in milliseconds elapsed during the active round
 survival_time: int = 0
-# Maximum survival limit representing 12 minutes of gameplay translated to milliseconds
-max_time = 60 * 12 * 1000
+# Maximum survival limit representing 15 minutes of gameplay translated to milliseconds
+max_time = 60 * 15 * 1000
 # Penalty value applied in milliseconds whenever a player closes doors
 door_time_penalty = 20 * 1000
 
