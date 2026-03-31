@@ -3,33 +3,44 @@ import pygame
 # Initialises pygame across the whole project, needed to import fonts
 pygame.init()
 
+# RGB tuples defining the visual palette of the Sudoku board and text
 defaultFontColor = (153, 185, 207)
 locked_tile_colour = (76, 83, 95)
 default_tile_colour = (42, 49, 54)
 selected_tile_colour = (170, 202, 224)
 board_background_color = (153, 185, 207)
 error_tile_color = (140, 40, 57)
-selected_tile_alpha = 60
-difficulty: str = "Normal"
 
+# Alpha transparency value for the player's active grid selection
+selected_tile_alpha = 60
+
+# Stores current difficulty setting (e.g., "Normal", "Nightmare")
+difficulty: str = "Normal"
+# Defines active player count for session
 player_count: int = 1
 
-# Counter for how long the round has been running
+# Survival & Time Mechanics
+# Tracks the total time in milliseconds elapsed during the active round
 survival_time: int = 0
-# Maximum time in milliseconds, 12 minutes
+# Maximum survival limit representing 12 minutes of gameplay translated to milliseconds
 max_time = 60 * 12 * 1000
-# Power penalty for closing doors, 20 seconds
+# Penalty value applied in milliseconds whenever a player closes doors
 door_time_penalty = 20 * 1000
 
+# Text colour for the number inside Sudoku cells
 tile_text_color = (170, 202, 224)
+
+# Pre-loading project-wide custom TTF font files at designated sizes
 tile_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 16)
 button_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 20)
 time_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 12)
 tutorial_font = time_font
 title_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 32)
 
+# Global flag used to break main loops and exit player to the title screen
 returning_to_title: bool = False
 
+# Absolute paths pointing to the background ambience and failure sound effects
 ambient_music_path = str("assets/loopingambience.ogg")
 musicbox_music_path = str("assets/music_box.ogg")
 
