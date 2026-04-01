@@ -47,6 +47,7 @@ error_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 locked_tile_texture = pygame.Surface((grid_tile_size, grid_tile_size))
 
 rendered_numbers = []
+selected_rendered_numbers = []
 
 tile_texture.fill(globals.default_tile_colour)
 selected_tile_texture.fill(globals.selected_tile_colour)
@@ -64,12 +65,19 @@ selected_tile_y = 4
 def initialise_board():
     # Optimisation to store the text surfaces so they do not need to be re-rendered every frame
     global rendered_numbers
+    global selected_rendered_numbers
     rendered_numbers = []
+    selected_rendered_numbers = []
     for i in range(1, 10):
         rendered_number_surface = globals.tile_font.render(
             str(i), True, globals.tile_text_color
         )
         rendered_numbers.append(rendered_number_surface)
+
+        selected_rendered_number_surface = globals.tile_font.render(
+            str(i), True, globals.selected_tile_text_color
+        )
+        selected_rendered_numbers.append(selected_rendered_number_surface)
 
     new_state = get_random_puzzle()
 
@@ -162,12 +170,25 @@ def draw_3x_grid(x, y):
     # Coordinate of the 3x3 square to be compared to any errors in failed_squares
     square = pygame.Vector2(x, y)
 
+    # Store the number in the selected tile
+    selected_number = board_state[selected_tile_x][selected_tile_y]
+
     # Iterate through each of the 9 tiles within the 3x3 block
     for tile_x in range(3):
         for tile_y in range(3):
             # Map the local 3x3 coordinates to global 9x9 board coordinates
             total_x_position = tile_x + x * 3
             total_y_position = tile_y + y * 3
+
+            is_selected = (
+                total_x_position == selected_tile_x
+                and total_y_position == selected_tile_y
+            )
+
+            # Retrieve the number stored at this position (0 represents an empty cell)
+            number = board_state[total_x_position][total_y_position]
+
+            matches_selected_number = selected_number == number
 
             # Compute the exact pixel location to draw this specific tile
             draw_location = (
@@ -190,19 +211,14 @@ def draw_3x_grid(x, y):
                 # Standard active tile background
                 board_texture.blit(tile_texture, draw_location)
 
-            # Draw a border or overlay if this tile is currently selected by the player
-            if (
-                total_x_position == selected_tile_x
-                and total_y_position == selected_tile_y
-            ):
+            # Draw an overlay if this tile is currently selected by the player
+            if is_selected:
                 # Offset by 2 pixels to properly align the selection highlight border
                 board_texture.blit(
                     selected_tile_texture, (draw_location[0] + 2, draw_location[1] + 2)
                 )
 
-            # Retrieve the number stored at this position (0 represents an empty cell)
-            tile_text = board_state[total_x_position][total_y_position]
-            if tile_text != 0:
+            if number != 0:
                 # Apply custom font offsets to ensure the number renders directly in the center of the tile
                 text_location_x = draw_location[0]
                 text_location_y = draw_location[1]
@@ -210,9 +226,16 @@ def draw_3x_grid(x, y):
                 text_location_y += tile_font_draw_offset[1]
 
                 # Render the pre-cached number surface (adjusted for 0-based index)
-                board_texture.blit(
-                    rendered_numbers[tile_text - 1], (text_location_x, text_location_y)
-                )
+                if matches_selected_number:
+                    board_texture.blit(
+                        selected_rendered_numbers[number - 1],
+                        (text_location_x, text_location_y),
+                    )
+                else:
+                    board_texture.blit(
+                        rendered_numbers[number - 1],
+                        (text_location_x, text_location_y),
+                    )
 
 
 def up_pressed():

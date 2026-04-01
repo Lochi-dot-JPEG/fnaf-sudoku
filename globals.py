@@ -12,7 +12,7 @@ board_background_color = (153, 185, 207)
 error_tile_color = (140, 40, 57)
 
 # Alpha transparency value for the player's active grid selection
-selected_tile_alpha = 60
+selected_tile_alpha = 120
 
 # Stores current difficulty setting (e.g., "Normal", "Nightmare")
 difficulty: str = "Normal"
@@ -25,10 +25,11 @@ survival_time: int = 0
 # Maximum survival limit representing 15 minutes of gameplay translated to milliseconds
 max_time = 60 * 15 * 1000
 # Penalty value applied in milliseconds whenever a player closes doors
-door_time_penalty = 20 * 1000
+door_time_penalty = 10 * 1000
 
 # Text colour for the number inside Sudoku cells
 tile_text_color = (170, 202, 224)
+selected_tile_text_color = (255, 255, 255)
 
 # Pre-loading project-wide custom TTF font files at designated sizes
 tile_font = pygame.font.Font("assets/JetBrainsMonoNL-Bold.ttf", 16)
